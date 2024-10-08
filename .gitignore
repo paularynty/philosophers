@@ -1,0 +1,5 @@
+*.out
+*.dSYM
+./philo
+.DS_Store
+objs/
