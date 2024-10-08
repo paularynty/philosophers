@@ -6,7 +6,7 @@
 /*   By: prynty <paula.rynty@student.hive.fi>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 14:38:20 by prynty            #+#    #+#             */
-/*   Updated: 2024/10/08 15:41:31 by prynty           ###   ########.fr       */
+/*   Updated: 2024/10/08 16:27:22 by prynty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,26 @@ TODO:
 
 #include "../include/philo.h"
 
+void	init_struct(t_philo *philo)
+{
+	philo->argc = argc;
+	philo->argv = argv;
+	philo->nbr = argv[1];
+	philo->die = argv[2];
+	philo->eat = argv[3];
+	philo->sleep = argv[4];
+}
+
+static int	validate_args(t_philo *philo)
+{
+	if (philo->argc != 6)
+	{
+		write(2, "Usage: ./philosophers number_of_philosophers time_to_die time_to_eat time_to_sleep number_of_times_each_philosopher_must_eat\n", 125);
+		return (1);
+	}
+	return (0);
+}
+
 //number of philosophers, time to die, time to eat, time to sleep, (number 
 //of times each philosopher must eat)
 int	main(int argc, char **argv)
@@ -31,11 +51,9 @@ int	main(int argc, char **argv)
 
 	i = 0;
 	(void)argv;
-	if (argc != 6)
-	{
-		write(2, "Usage: ./philosophers number_of_philosophers time_to_die time_to_eat time_to_sleep number_of_times_each_philosopher_must_eat\n", 125);
+	init_struct(&philo);
+	if (validate_args(&philo))
 		return (-1);
-	}
 	pthread_mutex_init(&mutex, NULL);
 	while (i <= philo.nbr)
 	{

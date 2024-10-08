@@ -6,7 +6,7 @@
 /*   By: prynty <paula.rynty@student.hive.fi>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 14:38:32 by prynty            #+#    #+#             */
-/*   Updated: 2024/10/08 15:10:19 by prynty           ###   ########.fr       */
+/*   Updated: 2024/10/08 16:29:59 by prynty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,14 @@
 
 typedef struct s_philo
 {
-	size_t	nbr; //nbr of philosophers
+	int			argc;
+	char		**argv;
+	pthread_t	thread;
+	int			die;
+	int			eat;
+	int			sleep;
+	int			id; //individual philo id
+	size_t		nbr; //nbr of philosophers
 }	t_philo;
 
 #endif
