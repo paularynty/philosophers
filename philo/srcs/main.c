@@ -6,7 +6,7 @@
 /*   By: prynty <paula.rynty@student.hive.fi>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 14:38:20 by prynty            #+#    #+#             */
-/*   Updated: 2024/10/08 15:29:55 by prynty           ###   ########.fr       */
+/*   Updated: 2024/10/08 15:41:31 by prynty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,5 +42,6 @@ int	main(int argc, char **argv)
 		pthread_create(pthread_t *restrict thread, const pthread_attr_t *restrict attr, void *(*start_routine)(void *), void *restrict arg);
 		i++;
 	}
+	pthread_mutex_destroy(&mutex);
 	return (0);
 }
