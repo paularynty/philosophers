@@ -6,7 +6,7 @@
 #    By: prynty <paula.rynty@student.hive.fi>       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/08 14:38:26 by prynty            #+#    #+#              #
-#    Updated: 2024/10/08 15:05:55 by prynty           ###   ########.fr        #
+#    Updated: 2024/10/12 15:32:47 by prynty           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -55,11 +55,11 @@ objs:
 	@mkdir -p objs/
 
 objs/%.o: srcs/%.c | objs
-	@cc $(CFLAGS) -c $< -o $@
+	@cc $(FLAGS) -c $< -o $@
 
 $(NAME): $(OBJS)
 	@$(OBJ_READY)
-	@cc -g $(CFLAGS) $(SRCS) -o $(NAME)
+	@cc -g -pthread $(CFLAGS) $(SRCS) -o $(NAME)
 	@chmod 777 $(NAME)
 	@$(PHILO_READY)
 
