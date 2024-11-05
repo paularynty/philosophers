@@ -1,0 +1,10 @@
+
+DONE:
+- validate args
+
+TODO:
+- Create a data structure to store all required information about a philosopher
+- Create the correct number of philosopher
+- Create the correct number of threads
+- Create a routine (what each philosopher has to do? in which order?)
+- Initiate the threads with said routine

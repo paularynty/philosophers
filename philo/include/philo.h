@@ -6,7 +6,7 @@
 /*   By: prynty <prynty@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 14:38:32 by prynty            #+#    #+#             */
-/*   Updated: 2024/10/19 15:43:53 by prynty           ###   ########.fr       */
+/*   Updated: 2024/10/31 14:13:50 by prynty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 # include <unistd.h> //for write, usleep
 
 # define PHILO_MAX 200
+
 # define RED "\033[1;91m"
 # define RESET "\033[0;39m"
 
@@ -55,5 +56,20 @@ typedef struct s_program
 	pthread_mutex_t	write_lock;
 	t_philo			*philos;
 }					t_program;
+
+//errors.c
+void	print_error(char *msg);
+void	destroy_all(t_program *program, pthread_mutex_t *forks);
+
+//init.c
+void	validate_args(int argc, char **argv);
+void	init_struct(t_philo *philos, int argc, char **argv);
+void	init_forks(pthread_mutex_t *forks, int philos);
+
+//utils.c
+size_t	get_current_time(void);
+int		ft_usleep(size_t milliseconds);
+int		is_digit(char *str);
+size_t	ft_atoi(char *str);
 
 #endif
