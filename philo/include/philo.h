@@ -6,7 +6,7 @@
 /*   By: prynty <prynty@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 14:38:32 by prynty            #+#    #+#             */
-/*   Updated: 2024/10/31 14:13:50 by prynty           ###   ########.fr       */
+/*   Updated: 2024/11/05 18:51:48 by prynty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,13 @@
 # include <unistd.h> //for write, usleep
 
 # define PHILO_MAX 200
+
+# define RFORK "has taken a fork"
+# define LFORK "has taken a fork"
+# define EAT "is eating"
+# define THINK "is thinking"
+# define SLEEP "is sleeping"
+# define DIED "died"
 
 # define RED "\033[1;91m"
 # define RESET "\033[0;39m"
@@ -59,7 +66,7 @@ typedef struct s_program
 
 //errors.c
 void	print_error(char *msg);
-void	destroy_all(t_program *program, pthread_mutex_t *forks);
+void	terminate(char *str, t_program *program, pthread_mutex_t *forks);
 
 //init.c
 void	validate_args(int argc, char **argv);

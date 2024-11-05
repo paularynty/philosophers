@@ -6,7 +6,7 @@
 /*   By: prynty <prynty@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 14:06:30 by prynty            #+#    #+#             */
-/*   Updated: 2024/10/31 14:11:18 by prynty           ###   ########.fr       */
+/*   Updated: 2024/11/05 19:04:19 by prynty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,8 @@ void	validate_args(int argc, char **argv)
 	int	i;
 
 	if (argc < 5 || argc > 6)
-		print_error("Usage: ./philo number_of_philosophers time_to_die time_to_eat time_to_sleep number_of_times_each_philosopher_must_eat");
+		print_error("Usage: ./philo number_of_philosophers time_to_die time_to_eat\
+			time_to_sleep number_of_times_each_philosopher_must_eat");
 	i = 1;
 	while (i < argc)
 	{
