@@ -5,35 +5,46 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: prynty <prynty@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/31 14:08:52 by prynty            #+#    #+#             */
-/*   Updated: 2024/11/05 13:32:39 by prynty           ###   ########.fr       */
+/*   Created: 2024/11/06 16:18:52 by prynty            #+#    #+#             */
+/*   Updated: 2024/11/06 19:30:59 by prynty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philo.h"
 
-size_t	get_current_time(void)
+int	print_message(char *msg, t_philo *philo)
+{
+	size_t	time;
+
+	time = get_time() - philo->start_time;
+	pthread_mutex_lock(philo->lock);
+	// if (!dead_philo(philo))
+	printf("%zu %d %s\n", time, philo->threads->id, msg);
+	pthread_mutex_unlock(philo->lock);
+	return (SUCCESS);
+}
+
+size_t	get_time(void)
 {
 	struct timeval	time;
 
-	if (gettimeofday(&time, NULL) == -1)
-		write(2, "gettimeofday failed\n", 21);
+	gettimeofday(&time, NULL);
 	return (time.tv_sec * 1000 + time.tv_usec / 1000);
 }
 
-int	ft_usleep(size_t milliseconds)
+int	ft_usleep(size_t ms)
 {
 	size_t	start;
 
-	start = get_current_time();
-	while ((get_current_time() - start) < milliseconds)
+	start = get_time();
+	while ((get_time() - start) < ms)
 		usleep(500);
 	return (0);
 }
 
-int	ft_strlen(char *str)
+size_t	ft_strlen(char *str)
 {
-	int	i;
+	size_t	i;
 
 	i = 0;
 	while (str[i])
@@ -55,10 +66,8 @@ int	is_digit(char *str)
 size_t	ft_atoi(char *str)
 {
 	long	result;
-	long	check;
 
 	result = 0;
-	check = result;
 	while (*str >= '0' && *str <= '9')
 	{
 		result = (result * 10) + (*str - '0');

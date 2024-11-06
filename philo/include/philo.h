@@ -6,7 +6,7 @@
 /*   By: prynty <prynty@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 14:38:32 by prynty            #+#    #+#             */
-/*   Updated: 2024/11/05 18:51:48 by prynty           ###   ########.fr       */
+/*   Updated: 2024/11/06 19:31:07 by prynty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,8 @@
 # include <sys/time.h> //for gettimeofday
 # include <unistd.h> //for write, usleep
 
-# define PHILO_MAX 200
+# define SUCCESS 1
+# define FAILURE 0
 
 # define RFORK "has taken a fork"
 # define LFORK "has taken a fork"
@@ -32,13 +33,21 @@
 # define RED "\033[1;91m"
 # define RESET "\033[0;39m"
 
+typedef struct s_philo	t_philo;
+
+typedef struct s_thread
+{
+	t_philo			*philo;
+	int				id;
+	pthread_t		thread;
+	pthread_mutex_t	*r_fork;
+	pthread_mutex_t	*l_fork;
+}	t_thread;
+
 typedef struct s_philo
 {
-	int				argc;
-	char			**argv;
-	pthread_t		thread;
-	int				id; //individual philo id
-	int				num_of_philos;
+	t_thread		*threads;
+	size_t			num_of_philos;
 	int				eating;
 	int				meals_eaten;
 	size_t			last_meal;
@@ -48,11 +57,8 @@ typedef struct s_philo
 	size_t			start_time;
 	size_t			num_times_to_eat;
 	int				*dead;
-	pthread_mutex_t	*r_fork;
-	pthread_mutex_t	*l_fork;
-	pthread_mutex_t	*write_lock;
-	pthread_mutex_t	*dead_lock;
-	pthread_mutex_t	*meal_lock;
+	pthread_mutex_t	*lock;
+	pthread_mutex_t	*forks;
 }	t_philo;
 
 typedef struct s_program
@@ -66,16 +72,26 @@ typedef struct s_program
 
 //errors.c
 void	print_error(char *msg);
-void	terminate(char *str, t_program *program, pthread_mutex_t *forks);
+void	terminate(char *str, t_philo *philo);
 
 //init.c
 void	validate_args(int argc, char **argv);
-void	init_struct(t_philo *philos, int argc, char **argv);
-void	init_forks(pthread_mutex_t *forks, int philos);
+void	init_struct(t_philo *philos, char **argv);
+void	init_forks(t_philo *philo);
+
+//routine.c
+int		eating(t_philo *philo);
+int		thinking(t_philo *philo);
+int		sleeping(t_philo *philo);
+void	*routine(void *ptr);
+
+//threads.c
+int		create_thread(t_philo *philo);
 
 //utils.c
-size_t	get_current_time(void);
-int		ft_usleep(size_t milliseconds);
+int		print_message(char *msg, t_philo *philo);
+size_t	get_time(void);
+int		ft_usleep(size_t ms);
 int		is_digit(char *str);
 size_t	ft_atoi(char *str);
 

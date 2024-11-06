@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: prynty <paula.rynty@student.hive.fi>       +#+  +:+       +#+         #
+#    By: prynty <prynty@student.hive.fi>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/08 14:38:26 by prynty            #+#    #+#              #
-#    Updated: 2024/10/12 15:32:47 by prynty           ###   ########.fr        #
+#    Updated: 2024/11/06 17:45:38 by prynty           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -45,6 +45,11 @@ NAME			= philo
 CFLAGS			= -Wall -Wextra -Werror
 
 FILES			= main.c \
+				cleanup.c \
+				init.c \
+				routine.c \
+				threads.c \
+				utils.c
 
 SRCS			= $(addprefix srcs/, $(FILES))
 OBJS			= $(addprefix objs/, $(FILES:.c=.o))
