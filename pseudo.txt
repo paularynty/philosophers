@@ -8,3 +8,5 @@ TODO:
 - Create the correct number of threads
 - Create a routine (what each philosopher has to do? in which order?)
 - Initiate the threads with said routine
+
+-

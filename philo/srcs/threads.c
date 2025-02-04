@@ -6,7 +6,7 @@
 /*   By: prynty <prynty@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 16:24:40 by prynty            #+#    #+#             */
-/*   Updated: 2024/11/06 18:56:00 by prynty           ###   ########.fr       */
+/*   Updated: 2025/01/31 14:33:23 by prynty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,12 @@ int	create_thread(t_philo *philo)
 	size_t	i;
 
 	i = 0;
-	while (i < philo->num_of_philos)
+	printf("%zu\n", philo->num_of_philos - 1);
+	while (i < philo->num_of_philos - 1)
 	{
 		if (pthread_create(&(philo->threads[i].thread), NULL, &routine,
 				&philo->threads[i]) != 0)
-			print_error("Error creating threads");
+			return (terminate("Error creating threads", philo), 1);
 		i++;
 	}
 	return (0);

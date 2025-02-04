@@ -6,7 +6,7 @@
 /*   By: prynty <prynty@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 14:38:32 by prynty            #+#    #+#             */
-/*   Updated: 2024/11/06 19:31:07 by prynty           ###   ########.fr       */
+/*   Updated: 2025/02/04 13:29:24 by prynty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,8 @@
 # include <sys/time.h> //for gettimeofday
 # include <unistd.h> //for write, usleep
 
-# define SUCCESS 1
-# define FAILURE 0
+# define TRUE 1
+# define FALSE 0
 
 # define RFORK "has taken a fork"
 # define LFORK "has taken a fork"
@@ -31,6 +31,7 @@
 # define DIED "died"
 
 # define RED "\033[1;91m"
+# define PINK "\e[1m\e[38;5;206m"
 # define RESET "\033[0;39m"
 
 typedef struct s_philo	t_philo;
@@ -57,7 +58,7 @@ typedef struct s_philo
 	size_t			start_time;
 	size_t			num_times_to_eat;
 	int				*dead;
-	pthread_mutex_t	*lock;
+	pthread_mutex_t	lock;
 	pthread_mutex_t	*forks;
 }	t_philo;
 
@@ -71,12 +72,14 @@ typedef struct s_program
 }					t_program;
 
 //errors.c
+void	usage(void);
 void	print_error(char *msg);
 void	terminate(char *str, t_philo *philo);
 
 //init.c
-void	validate_args(int argc, char **argv);
-void	init_struct(t_philo *philos, char **argv);
+int		validate_args(int argc, char **argv);
+int		allocate_data(t_philo *philo);
+int		init_data(t_philo *philo, char **argv);
 void	init_forks(t_philo *philo);
 
 //routine.c
@@ -91,7 +94,7 @@ int		create_thread(t_philo *philo);
 //utils.c
 int		print_message(char *msg, t_philo *philo);
 size_t	get_time(void);
-int		ft_usleep(size_t ms);
+int		ft_usleep(size_t ms, t_philo *philo);
 int		is_digit(char *str);
 size_t	ft_atoi(char *str);
 

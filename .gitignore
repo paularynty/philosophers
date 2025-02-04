@@ -1,5 +1,9 @@
 *.out
+*.vscode
 *.dSYM
 ./philo
 .DS_Store
 objs/
+srcs_old/
+pseudo.txt
+philo

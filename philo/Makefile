@@ -6,7 +6,7 @@
 #    By: prynty <prynty@student.hive.fi>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/08 14:38:26 by prynty            #+#    #+#              #
-#    Updated: 2024/11/06 17:45:38 by prynty           ###   ########.fr        #
+#    Updated: 2025/01/31 15:21:44 by prynty           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -36,13 +36,13 @@ WHITE 			= \033[1;97m
 OBJ_READY		= echo "📥 $(ORANGE)Compiled Philosophers files!$(RESET)"
 PHILO_READY		= echo "🧮 $(GREEN)Philosophers ready! Run the program with ./philo [args]$(RESET)"
 CLEANING		= echo "💧 $(CYAN)Cleaning...$(RESET)"
-CLEANED			= echo "💧 $(CYAN_BOLD)Successfully cleaned all object files!$(RESET)"
+CLEANED			= echo "💧 $(CYAN_BOLD)TRUEfully cleaned all object files!$(RESET)"
 FCLEANING		= echo "🧼 $(BLUE)Deep cleaning...$(RESET)"
-FCLEANED		= echo "🧼 $(BLUE_BOLD)Successfully cleaned all executable files!$(RESET)"
-REMAKE			= echo "✅ $(GREEN)Successfully cleaned and rebuilt everything!$(RESET)"
+FCLEANED		= echo "🧼 $(BLUE_BOLD)TRUEfully cleaned all executable files!$(RESET)"
+REMAKE			= echo "✅ $(GREEN)TRUEfully cleaned and rebuilt everything!$(RESET)"
 
 NAME			= philo
-CFLAGS			= -Wall -Wextra -Werror
+CFLAGS			= -Wall -Wextra -Werror -fsanitize=address -g
 
 FILES			= main.c \
 				cleanup.c \
