@@ -6,7 +6,7 @@
 /*   By: prynty <prynty@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 16:23:16 by prynty            #+#    #+#             */
-/*   Updated: 2025/01/31 16:30:49 by prynty           ###   ########.fr       */
+/*   Updated: 2025/02/07 09:42:29 by prynty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,28 +28,45 @@ int	validate_args(int argc, char **argv)
 	return (TRUE);
 }
 
+void	init_threads(t_philo *philo)
+{
+	size_t	i;
+
+	i = 0;
+	while (i < philo->philos_num)
+	{
+		philo->threads[i].philo = philo;
+		philo->threads[i].meals_eaten = 0;
+		philo->threads[i].id = i + 1;
+		philo->threads[i].l_fork = &philo->forks[i];
+		philo->threads[i].r_fork = &philo->forks[(i + 1) % philo->philos_num];
+		philo->threads[i++].prev_meal = philo->start_time;
+	}
+}
+
 void	init_mutexes(t_philo *philo)
 {
 	size_t	i;
 
 	i = 0;
-	while (i < philo->num_of_philos - 1)
+	while (i < philo->philos_num)
 		if (pthread_mutex_init(&philo->forks[i++], NULL) != 0)
 			print_error("Error creating forks");
-	if (pthread_mutex_init(&philo->lock, NULL) != 0)
+	if (pthread_mutex_init(&philo->data_lock, NULL) != 0
+		|| pthread_mutex_init(&philo->print_lock, NULL) != 0)
 	{
 		i = 0;
-		while (i < philo->num_of_philos - 1)
+		while (i < philo->philos_num)
 			pthread_mutex_destroy(&philo->forks[i++]);
 	}
 }
 
 int	allocate_data(t_philo *philo)
 {
-	philo->threads = malloc(sizeof(t_thread) * philo->num_of_philos);
+	philo->threads = malloc(sizeof(t_thread) * philo->philos_num);
 	if (!philo->threads)
 		return (print_error("Failed to allocate threads"), FALSE);
-	philo->forks = malloc(sizeof(pthread_mutex_t) * philo->num_of_philos);
+	philo->forks = malloc(sizeof(pthread_mutex_t) * philo->philos_num);
 	if (!philo->forks)
 	{
 		free(philo->threads);
@@ -60,7 +77,7 @@ int	allocate_data(t_philo *philo)
 
 int	init_data(t_philo *philo, char **argv)
 {
-	philo->num_of_philos = ft_atoi(argv[1]);
+	philo->philos_num = ft_atoi(argv[1]);
 	philo->time_to_die = ft_atoi(argv[2]);
 	philo->time_to_eat = ft_atoi(argv[3]);
 	philo->time_to_sleep = ft_atoi(argv[4]);
@@ -68,9 +85,13 @@ int	init_data(t_philo *philo, char **argv)
 		philo->num_times_to_eat = ft_atoi(argv[5]);
 	else
 		philo->num_times_to_eat = -1;
+	philo->dead_or_full = FALSE;
+	philo->meals_eaten = 0;
+	philo->full_philos = 0;
 	philo->start_time = get_time();
 	if (!allocate_data(philo))
 		return (FALSE);
 	init_mutexes(philo);
+	init_threads(philo);
 	return (TRUE);
 }

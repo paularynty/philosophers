@@ -6,7 +6,7 @@
 /*   By: prynty <prynty@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 16:17:48 by prynty            #+#    #+#             */
-/*   Updated: 2025/02/04 13:20:30 by prynty           ###   ########.fr       */
+/*   Updated: 2025/02/07 09:29:37 by prynty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,12 @@ void	usage(void)
 {
 	printf("\n"PINK);
 	printf("Usage: ./philo philo_num die_time eat_time sleep_time meal_num\n");
-	printf("\nArgument	Description			Mandatory?	Type\n"RESET);
-	printf("philo_num	number of philosophers		yes		unsigned\n");
-	printf("die_time	time to die			yes		unsigned\n");
-	printf("eat_time	time to eat			yes		unsigned\n");
-	printf("sleep_time	time to sleep			yes		unsigned\n");
-	printf("meals_num	times each philosopher must eat	no		unsigned\n");
+	printf("\nArgument\tDescription\t\t\t\tMandatory?\tType\n"RESET);
+	printf("philo_num\tnumber of philosophers\t\t\tyes\t\tunsigned number\n");
+	printf("die_time\ttime to die\t\t\t\tyes\t\tunsigned number\n");
+	printf("eat_time\ttime to eat\t\t\t\tyes\t\tunsigned number\n");
+	printf("sleep_time\ttime to sleep\t\t\t\tyes\t\tunsigned number\n");
+	printf("meals_num\ttimes each philosopher must eat\t\tno\t\tunsigned number\n");
 }
 
 void	print_error(char *msg)
@@ -35,11 +35,15 @@ void	terminate(char *str, t_philo *philo)
 	size_t	i;
 
 	if (str)
+	{
+		printf(RED"Error\n"RESET);
 		printf("%s\n", str);
+	}
 	i = 0;
-	while (i < philo->num_of_philos)
+	while (i < philo->philos_num)
 		pthread_mutex_destroy(&philo->forks[i++]);
-	pthread_mutex_destroy(&philo->lock);
+	pthread_mutex_destroy(&philo->data_lock);
+	pthread_mutex_destroy(&philo->print_lock);
 	free(philo->threads);
 	free(philo->forks);
 }

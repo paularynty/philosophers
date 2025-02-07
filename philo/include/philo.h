@@ -6,7 +6,7 @@
 /*   By: prynty <prynty@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 14:38:32 by prynty            #+#    #+#             */
-/*   Updated: 2025/02/04 13:29:24 by prynty           ###   ########.fr       */
+/*   Updated: 2025/02/07 09:43:00 by prynty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,9 @@ typedef struct s_philo	t_philo;
 typedef struct s_thread
 {
 	t_philo			*philo;
-	int				id;
+	size_t			id;
+	size_t			prev_meal;
+	size_t			meals_eaten;
 	pthread_t		thread;
 	pthread_mutex_t	*r_fork;
 	pthread_mutex_t	*l_fork;
@@ -48,28 +50,21 @@ typedef struct s_thread
 typedef struct s_philo
 {
 	t_thread		*threads;
-	size_t			num_of_philos;
-	int				eating;
-	int				meals_eaten;
+	size_t			philos_num;
+	size_t			eating;
+	size_t			meals_eaten;
 	size_t			last_meal;
 	size_t			time_to_die;
 	size_t			time_to_eat;
 	size_t			time_to_sleep;
 	size_t			start_time;
 	size_t			num_times_to_eat;
-	int				*dead;
-	pthread_mutex_t	lock;
+	size_t			full_philos;
+	int				dead_or_full;
+	pthread_mutex_t	print_lock;
+	pthread_mutex_t	data_lock;
 	pthread_mutex_t	*forks;
 }	t_philo;
-
-typedef struct s_program
-{
-	int				dead_flag;
-	pthread_mutex_t	dead_lock;
-	pthread_mutex_t	meal_lock;
-	pthread_mutex_t	write_lock;
-	t_philo			*philos;
-}					t_program;
 
 //errors.c
 void	usage(void);
@@ -83,12 +78,11 @@ int		init_data(t_philo *philo, char **argv);
 void	init_forks(t_philo *philo);
 
 //routine.c
-int		eating(t_philo *philo);
-int		thinking(t_philo *philo);
-int		sleeping(t_philo *philo);
 void	*routine(void *ptr);
 
 //threads.c
+int		stop_thread(t_philo *philo);
+int		join_thread(t_philo *philo);
 int		create_thread(t_philo *philo);
 
 //utils.c
