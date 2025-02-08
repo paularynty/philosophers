@@ -6,7 +6,7 @@
 #    By: prynty <prynty@student.hive.fi>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/08 14:38:26 by prynty            #+#    #+#              #
-#    Updated: 2025/02/07 08:46:05 by prynty           ###   ########.fr        #
+#    Updated: 2025/02/08 20:00:50 by prynty           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -42,29 +42,32 @@ FCLEANED		= echo "🧼 $(BLUE_BOLD)Successfully cleaned all executable files!$(R
 REMAKE			= echo "✅ $(GREEN)Successfully cleaned and rebuilt everything!$(RESET)"
 
 NAME			= philo
-CFLAGS			= -Wall -Wextra -Werror -fsanitize=address -g
 
-FILES			= main.c \
-				cleanup.c \
-				init.c \
-				routine.c \
-				threads.c \
-				utils.c
+SRCDIR			= srcs
+OBJDIR			= objs
+INCLUDE			= include
 
-SRCS			= $(addprefix srcs/, $(FILES))
-OBJS			= $(addprefix objs/, $(FILES:.c=.o))
+CFLAGS			= -Wall -Wextra -Werror -I $(INCLUDE)
+
+SRCS			= $(SRCDIR)/main.c \
+				$(SRCDIR)/forks.c \
+				$(SRCDIR)/cleanup.c \
+				$(SRCDIR)/init.c \
+				$(SRCDIR)/routine.c \
+				$(SRCDIR)/threads.c \
+				$(SRCDIR)/utils.c
+
+OBJS			= $(SRCS:$(SRCDIR)/%.c=$(OBJDIR)/%.o)
 
 all: $(NAME)
 
-objs:
-	@mkdir -p objs/
-
-objs/%.o: srcs/%.c | objs
-	@cc $(FLAGS) -c $< -o $@
+$(OBJDIR)/%.o: $(SRCDIR)/%.c
+	@mkdir -p $(dir $@)
+	@cc -c -g $(CFLAGS) $< -o $@
 
 $(NAME): $(OBJS)
-	@$(OBJ_READY)
 	@cc -g -pthread $(CFLAGS) $(SRCS) -o $(NAME)
+	@$(OBJ_READY)
 	@chmod 777 $(NAME)
 	@$(PHILO_READY)
 

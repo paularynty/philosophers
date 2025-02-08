@@ -6,11 +6,11 @@
 /*   By: prynty <prynty@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 16:17:48 by prynty            #+#    #+#             */
-/*   Updated: 2025/02/07 09:29:37 by prynty           ###   ########.fr       */
+/*   Updated: 2025/02/08 19:45:06 by prynty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/philo.h"
+#include "philo.h"
 
 void	usage(void)
 {

@@ -6,11 +6,11 @@
 /*   By: prynty <prynty@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 16:24:40 by prynty            #+#    #+#             */
-/*   Updated: 2025/02/08 17:23:01 by prynty           ###   ########.fr       */
+/*   Updated: 2025/02/08 20:21:52 by prynty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/philo.h"
+#include "philo.h"
 
 int	time_to_stop(t_thread *thread)
 {
@@ -20,55 +20,76 @@ int	time_to_stop(t_thread *thread)
 	return (pthread_mutex_unlock(&thread->philo->data_lock), FALSE);
 }
 
-static int	thread_stopper(t_philo *philo)
+// static int	thread_stopper(t_philo *philo)
+// {
+// 	size_t	i;
+
+// 	i = 0;
+// 	printf("do we go here at all\n");
+// 	while (i < philo->philos_num)
+// 	{
+// 		pthread_mutex_lock(&philo->data_lock);
+// 		if ((get_time() - philo->threads[i].prev_meal >= philo->time_to_die)
+// 			|| philo->full_philos == philo->philos_num)
+// 		{
+// 			philo->dead_or_full = TRUE;
+// 			printf("or here\n");
+// 			if (philo->full_philos == philo->philos_num)
+// 				printf("Every philosopher ate %ld times\n", philo->meals_eaten);
+// 			else
+// 				printf("%zu %zu died\n", get_time() - philo->start_time, i + 1);
+// 			return (pthread_mutex_unlock(&philo->data_lock), TRUE);
+// 		}
+// 		i++;
+// 		pthread_mutex_unlock(&philo->data_lock);
+// 	}
+// 	return (TRUE);
+// }
+
+int	dead_check(t_philo *philo)
 {
 	size_t	i;
 
 	i = 0;
-	printf("do we go here at all\n");
 	while (i < philo->philos_num)
 	{
 		pthread_mutex_lock(&philo->data_lock);
 		if ((get_time() - philo->threads[i].prev_meal >= philo->time_to_die)
 			|| philo->full_philos == philo->philos_num)
 		{
+			// printf("check\n");
+			print_message(DIED, &philo->threads[i]);
 			philo->dead_or_full = TRUE;
-			printf("or here\n");
-			if (philo->full_philos == philo->philos_num)
-				printf("Every philosopher ate %ld times\n", philo->meals_eaten);
-			else
-				printf("%zu %zu died\n", get_time() - philo->start_time, i + 1);
-			return (pthread_mutex_unlock(&philo->data_lock), TRUE);
+			pthread_mutex_unlock(&philo->data_lock);
+			return (TRUE);	
 		}
-		i++;
 		pthread_mutex_unlock(&philo->data_lock);
+		i++;
 	}
-	return (TRUE);
+	return (FALSE);
 }
 
-// void	simulation(void *ptr)
-// {
-// 	t_thread	*thread;
-
-// 	thread = ptr;
-// 	while (TRUE)
-// 	{
-// 		if (dead_check(thread))
-// 			return (ptr);
-// 		if (max_meal(thread))
-// 			return (ptr);
-// 	}
-// 	return (ptr);
-// }
-
-void	stop_thread(t_philo *philo)
+void	*monitoring(void *ptr)
 {
+	t_philo	*philo;
+
+	philo = ptr;
 	while (TRUE)
 	{
-		if (thread_stopper(philo))
+		if (dead_check(philo))
 			break ;
 	}
+	return (ptr);
 }
+
+// void	stop_thread(t_philo *philo)
+// {
+// 	while (TRUE)
+// 	{
+// 		if (thread_stopper(philo))
+// 			break ;
+// 	}
+// }
 
 int	join_thread(t_philo *philo)
 {

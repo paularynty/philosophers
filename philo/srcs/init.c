@@ -6,11 +6,11 @@
 /*   By: prynty <prynty@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 16:23:16 by prynty            #+#    #+#             */
-/*   Updated: 2025/02/08 16:55:04 by prynty           ###   ########.fr       */
+/*   Updated: 2025/02/08 19:45:03 by prynty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/philo.h"
+#include "philo.h"
 
 int	validate_args(int argc, char **argv)
 {
