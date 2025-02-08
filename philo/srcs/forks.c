@@ -6,11 +6,23 @@
 /*   By: prynty <prynty@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 19:42:13 by prynty            #+#    #+#             */
-/*   Updated: 2025/02/08 20:46:31 by prynty           ###   ########.fr       */
+/*   Updated: 2025/02/08 21:29:11 by prynty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+void	unlock_forks_even(t_thread *thread)
+{
+	pthread_mutex_unlock(thread->left_fork);
+	pthread_mutex_unlock(thread->right_fork);
+}
+
+void	unlock_forks_odd(t_thread *thread)
+{
+	pthread_mutex_unlock(thread->right_fork);
+	pthread_mutex_unlock(thread->left_fork);
+}
 
 int	lock_forks_even(t_thread *thread)
 {
@@ -43,14 +55,3 @@ int	lock_forks_odd(t_thread *thread)
 	return (TRUE);
 }
 
-void	unlock_forks_even(t_thread *thread)
-{
-	pthread_mutex_unlock(thread->left_fork);
-	pthread_mutex_unlock(thread->right_fork);
-}
-
-void	unlock_forks_odd(t_thread *thread)
-{
-	pthread_mutex_unlock(thread->right_fork);
-	pthread_mutex_unlock(thread->left_fork);
-}

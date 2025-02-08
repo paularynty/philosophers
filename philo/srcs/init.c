@@ -6,7 +6,7 @@
 /*   By: prynty <prynty@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 16:23:16 by prynty            #+#    #+#             */
-/*   Updated: 2025/02/08 19:45:03 by prynty           ###   ########.fr       */
+/*   Updated: 2025/02/08 21:26:29 by prynty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,14 +78,18 @@ static int	allocate_data(t_philo *philo)
 
 int	init_data(t_philo *philo, char **argv)
 {
-	philo->philos_num = ft_atoi(argv[1]);
-	philo->time_to_die = ft_atoi(argv[2]);
-	philo->time_to_eat = ft_atoi(argv[3]);
-	philo->time_to_sleep = ft_atoi(argv[4]);
+	philo->philos_num = ft_atol(argv[1]);
+	philo->time_to_die = ft_atol(argv[2]);
+	philo->time_to_eat = ft_atol(argv[3]);
+	philo->time_to_sleep = ft_atol(argv[4]);
 	if (argv[5])
-		philo->num_times_to_eat = ft_atoi(argv[5]);
+		philo->num_times_to_eat = ft_atol(argv[5]);
 	else
 		philo->num_times_to_eat = -1;
+	if (philo->philos_num == 0 || philo->time_to_die == 0
+		|| philo->time_to_eat == 0 || philo->time_to_eat == 0
+		|| philo->num_times_to_eat == 0)
+		return (usage(), FALSE);
 	philo->dead_or_full = FALSE;
 	philo->meals_eaten = 0;
 	philo->full_philos = 0;

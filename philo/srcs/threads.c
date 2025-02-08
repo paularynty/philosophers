@@ -6,7 +6,7 @@
 /*   By: prynty <prynty@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 16:24:40 by prynty            #+#    #+#             */
-/*   Updated: 2025/02/08 20:53:03 by prynty           ###   ########.fr       */
+/*   Updated: 2025/02/08 21:14:36 by prynty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ int	time_to_stop(t_thread *thread)
 // 	return (TRUE);
 // }
 
-int	dead_check(t_philo *philo)
+int	dead_or_full(t_philo *philo)
 {
 	size_t	i;
 
@@ -57,8 +57,12 @@ int	dead_check(t_philo *philo)
 		if ((get_time() - philo->threads[i].prev_meal >= philo->time_to_die)
 			|| philo->full_philos == philo->philos_num)
 		{
-			print_message(DIED, &philo->threads[i]);
+			if (philo->full_philos == philo->philos_num)
+				printf("Every philosopher ate %ld times\n", philo->meals_eaten);
+			else
+				printf("%zu %zu died\n", get_time() - philo->start_time, i + 1);
 			philo->dead_or_full = TRUE;
+			// print_message(DIED, &philo->threads[i]);
 			return (pthread_mutex_unlock(&philo->data_lock), TRUE);
 		}
 		i++;
@@ -74,7 +78,7 @@ void	*monitoring(void *ptr)
 	philo = ptr;
 	while (TRUE)
 	{
-		if (dead_check(philo))
+		if (dead_or_full(philo))
 			break ;
 	}
 	return (ptr);

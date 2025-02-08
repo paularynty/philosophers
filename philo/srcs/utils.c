@@ -6,7 +6,7 @@
 /*   By: prynty <prynty@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 16:18:52 by prynty            #+#    #+#             */
-/*   Updated: 2025/02/08 20:44:49 by prynty           ###   ########.fr       */
+/*   Updated: 2025/02/08 21:20:39 by prynty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ int	is_digit(char *str)
 	return (TRUE);
 }
 
-size_t	ft_atoi(char *str)
+size_t	ft_atol(char *str)
 {
 	size_t	result;
 

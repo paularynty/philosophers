@@ -6,7 +6,7 @@
 /*   By: prynty <prynty@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 14:38:32 by prynty            #+#    #+#             */
-/*   Updated: 2025/02/08 20:45:04 by prynty           ###   ########.fr       */
+/*   Updated: 2025/02/08 21:20:39 by prynty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ void	*routine(void *ptr);
 
 //threads.c
 int		time_to_stop(t_thread *thread);
-int		dead_check(t_philo *philo);
+int		dead_or_full(t_philo *philo);
 // void	stop_thread(t_philo *philo);
 void	*monitoring(void *ptr);
 int		join_thread(t_philo *philo);
@@ -96,6 +96,6 @@ int		create_thread(t_philo *philo);
 size_t	get_time(void);
 int		ft_usleep(size_t ms, t_philo *philo);
 int		is_digit(char *str);
-size_t	ft_atoi(char *str);
+size_t	ft_atol(char *str);
 
 #endif
