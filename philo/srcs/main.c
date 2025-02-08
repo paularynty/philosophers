@@ -6,7 +6,7 @@
 /*   By: prynty <prynty@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 16:15:54 by prynty            #+#    #+#             */
-/*   Updated: 2025/02/08 19:58:19 by prynty           ###   ########.fr       */
+/*   Updated: 2025/02/08 20:47:16 by prynty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,6 @@ int	main(int argc, char **argv)
 	if (!create_thread(&philo))
 		return (1);
 	monitoring(&philo);
-	// stop_thread(&philo);
 	if (!join_thread(&philo))
 		return (1);
 	terminate(NULL, &philo);

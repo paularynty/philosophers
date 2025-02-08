@@ -6,7 +6,7 @@
 /*   By: prynty <prynty@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 14:38:32 by prynty            #+#    #+#             */
-/*   Updated: 2025/02/08 19:53:00 by prynty           ###   ########.fr       */
+/*   Updated: 2025/02/08 20:45:04 by prynty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,7 @@ int		validate_args(int argc, char **argv);
 int		init_data(t_philo *philo, char **argv);
 
 //routine.c
+int		print_message(char *msg, t_thread *thread);
 void	*routine(void *ptr);
 
 //threads.c
@@ -92,7 +93,6 @@ int		join_thread(t_philo *philo);
 int		create_thread(t_philo *philo);
 
 //utils.c
-int		print_message(char *msg, t_thread *thread);
 size_t	get_time(void);
 int		ft_usleep(size_t ms, t_philo *philo);
 int		is_digit(char *str);

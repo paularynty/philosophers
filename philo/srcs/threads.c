@@ -6,7 +6,7 @@
 /*   By: prynty <prynty@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 16:24:40 by prynty            #+#    #+#             */
-/*   Updated: 2025/02/08 20:21:52 by prynty           ###   ########.fr       */
+/*   Updated: 2025/02/08 20:53:03 by prynty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,14 +57,12 @@ int	dead_check(t_philo *philo)
 		if ((get_time() - philo->threads[i].prev_meal >= philo->time_to_die)
 			|| philo->full_philos == philo->philos_num)
 		{
-			// printf("check\n");
 			print_message(DIED, &philo->threads[i]);
 			philo->dead_or_full = TRUE;
-			pthread_mutex_unlock(&philo->data_lock);
-			return (TRUE);	
+			return (pthread_mutex_unlock(&philo->data_lock), TRUE);
 		}
-		pthread_mutex_unlock(&philo->data_lock);
 		i++;
+		pthread_mutex_unlock(&philo->data_lock);
 	}
 	return (FALSE);
 }
@@ -81,15 +79,6 @@ void	*monitoring(void *ptr)
 	}
 	return (ptr);
 }
-
-// void	stop_thread(t_philo *philo)
-// {
-// 	while (TRUE)
-// 	{
-// 		if (thread_stopper(philo))
-// 			break ;
-// 	}
-// }
 
 int	join_thread(t_philo *philo)
 {
