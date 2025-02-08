@@ -6,13 +6,13 @@
 /*   By: prynty <prynty@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 16:18:52 by prynty            #+#    #+#             */
-/*   Updated: 2025/02/07 09:44:01 by prynty           ###   ########.fr       */
+/*   Updated: 2025/02/08 16:59:13 by prynty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philo.h"
 
-int	print_message(char *msg, t_philo *philo)
+int	print_message(char *msg, t_thread *thread, t_philo *philo)
 {
 	size_t	time;
 
@@ -23,7 +23,7 @@ int	print_message(char *msg, t_philo *philo)
 		pthread_mutex_unlock(&philo->print_lock);
 		return (FALSE);
 	}
-	printf("%zu %zu %s\n", time, philo->threads->id, msg);
+	printf("%zu %zu %s\n", time, thread->id, msg);
 	pthread_mutex_unlock(&philo->print_lock);
 	return (TRUE);
 }
@@ -49,10 +49,10 @@ int	ft_usleep(size_t ms, t_philo *philo)
 		{
 			pthread_mutex_lock(&philo->data_lock);
 			if (philo->dead_or_full)
-				return (pthread_mutex_unlock(&philo->data_lock));
+				return (pthread_mutex_unlock(&philo->data_lock), FALSE);
 			pthread_mutex_unlock(&philo->data_lock);
 		}
-		usleep(500);
+		usleep(100);
 		i++;
 	}
 	return (TRUE);

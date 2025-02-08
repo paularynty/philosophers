@@ -6,7 +6,7 @@
 /*   By: prynty <prynty@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 16:23:16 by prynty            #+#    #+#             */
-/*   Updated: 2025/02/07 09:42:29 by prynty           ###   ########.fr       */
+/*   Updated: 2025/02/08 16:55:04 by prynty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int	validate_args(int argc, char **argv)
 	return (TRUE);
 }
 
-void	init_threads(t_philo *philo)
+static void	init_threads(t_philo *philo)
 {
 	size_t	i;
 
@@ -38,13 +38,14 @@ void	init_threads(t_philo *philo)
 		philo->threads[i].philo = philo;
 		philo->threads[i].meals_eaten = 0;
 		philo->threads[i].id = i + 1;
-		philo->threads[i].l_fork = &philo->forks[i];
-		philo->threads[i].r_fork = &philo->forks[(i + 1) % philo->philos_num];
+		philo->threads[i].left_fork = &philo->forks[i];
+		philo->threads[i].right_fork = &philo->forks[(i + 1)
+			% philo->philos_num];
 		philo->threads[i++].prev_meal = philo->start_time;
 	}
 }
 
-void	init_mutexes(t_philo *philo)
+static void	init_mutexes(t_philo *philo)
 {
 	size_t	i;
 
@@ -61,7 +62,7 @@ void	init_mutexes(t_philo *philo)
 	}
 }
 
-int	allocate_data(t_philo *philo)
+static int	allocate_data(t_philo *philo)
 {
 	philo->threads = malloc(sizeof(t_thread) * philo->philos_num);
 	if (!philo->threads)

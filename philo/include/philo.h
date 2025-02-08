@@ -6,7 +6,7 @@
 /*   By: prynty <prynty@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 14:38:32 by prynty            #+#    #+#             */
-/*   Updated: 2025/02/07 09:43:00 by prynty           ###   ########.fr       */
+/*   Updated: 2025/02/08 17:11:28 by prynty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,7 @@
 # define TRUE 1
 # define FALSE 0
 
-# define RFORK "has taken a fork"
-# define LFORK "has taken a fork"
+# define FORK "has taken a fork"
 # define EAT "is eating"
 # define THINK "is thinking"
 # define SLEEP "is sleeping"
@@ -43,8 +42,8 @@ typedef struct s_thread
 	size_t			prev_meal;
 	size_t			meals_eaten;
 	pthread_t		thread;
-	pthread_mutex_t	*r_fork;
-	pthread_mutex_t	*l_fork;
+	pthread_mutex_t	*right_fork;
+	pthread_mutex_t	*left_fork;
 }	t_thread;
 
 typedef struct s_philo
@@ -73,20 +72,19 @@ void	terminate(char *str, t_philo *philo);
 
 //init.c
 int		validate_args(int argc, char **argv);
-int		allocate_data(t_philo *philo);
 int		init_data(t_philo *philo, char **argv);
-void	init_forks(t_philo *philo);
 
 //routine.c
 void	*routine(void *ptr);
 
 //threads.c
-int		stop_thread(t_philo *philo);
+int		time_to_stop(t_thread *thread);
+void	stop_thread(t_philo *philo);
 int		join_thread(t_philo *philo);
 int		create_thread(t_philo *philo);
 
 //utils.c
-int		print_message(char *msg, t_philo *philo);
+int		print_message(char *msg, t_thread *thread, t_philo *philo);
 size_t	get_time(void);
 int		ft_usleep(size_t ms, t_philo *philo);
 int		is_digit(char *str);
