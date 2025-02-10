@@ -6,7 +6,7 @@
 /*   By: prynty <prynty@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 16:18:52 by prynty            #+#    #+#             */
-/*   Updated: 2025/02/08 21:20:39 by prynty           ###   ########.fr       */
+/*   Updated: 2025/02/10 14:21:11 by prynty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,13 @@ int	ft_usleep(size_t ms, t_philo *philo)
 {
 	size_t	start;
 
-	(void)philo;
 	start = get_time();
 	while ((get_time() - start) < ms)
+	{
+		if (philo->dead_or_full)
+			return (FALSE);
 		usleep(500);
+	}
 	return (TRUE);
 }
 

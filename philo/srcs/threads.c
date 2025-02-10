@@ -6,7 +6,7 @@
 /*   By: prynty <prynty@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 16:24:40 by prynty            #+#    #+#             */
-/*   Updated: 2025/02/08 21:14:36 by prynty           ###   ########.fr       */
+/*   Updated: 2025/02/10 14:08:48 by prynty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,12 +58,16 @@ int	dead_or_full(t_philo *philo)
 			|| philo->full_philos == philo->philos_num)
 		{
 			if (philo->full_philos == philo->philos_num)
-				printf("Every philosopher ate %ld times\n", philo->meals_eaten);
-			else
-				printf("%zu %zu died\n", get_time() - philo->start_time, i + 1);
-			philo->dead_or_full = TRUE;
-			// print_message(DIED, &philo->threads[i]);
-			return (pthread_mutex_unlock(&philo->data_lock), TRUE);
+			{
+				philo->dead_or_full = TRUE;
+				return (pthread_mutex_unlock(&philo->data_lock), TRUE);
+			}
+			else	
+			{			
+				print_message(DIED, &philo->threads[i]);
+				philo->dead_or_full = TRUE;
+				return (pthread_mutex_unlock(&philo->data_lock), TRUE);
+			}
 		}
 		i++;
 		pthread_mutex_unlock(&philo->data_lock);
@@ -78,7 +82,7 @@ void	*monitoring(void *ptr)
 	philo = ptr;
 	while (TRUE)
 	{
-		if (dead_or_full(philo))
+		if (dead_or_full(philo) == TRUE)
 			break ;
 	}
 	return (ptr);

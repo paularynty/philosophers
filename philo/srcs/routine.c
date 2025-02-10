@@ -6,7 +6,7 @@
 /*   By: prynty <prynty@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 17:31:50 by prynty            #+#    #+#             */
-/*   Updated: 2025/02/08 21:17:39 by prynty           ###   ########.fr       */
+/*   Updated: 2025/02/10 14:32:09 by prynty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,19 +38,21 @@ static int	eating(t_thread *thread)
 			return (FALSE);
 	}
 	pthread_mutex_lock(&thread->philo->data_lock);
-	thread->philo->meals_eaten++;
+	thread->meals_eaten++;
 	thread->prev_meal = get_time();
+	if (thread->meals_eaten == thread->philo->num_times_to_eat)
+		thread->philo->full_philos++;
 	pthread_mutex_unlock(&thread->philo->data_lock);
 	if (!print_message(EAT, thread))
 		return (FALSE);
-	ft_usleep(thread->philo->time_to_eat, thread->philo);
-	pthread_mutex_lock(&thread->philo->data_lock);
-	if (thread->philo->meals_eaten == thread->philo->num_times_to_eat)
+	/* pthread_mutex_lock(&thread->philo->data_lock);
+	if (thread->meals_eaten == thread->philo->num_times_to_eat)
 	{
-		printf("check %zu\n", thread->id);
+		// printf("meals eaten: %zu\n", thread->meals_eaten);
 		thread->philo->full_philos++;
 	}
-	pthread_mutex_unlock(&thread->philo->data_lock);
+	pthread_mutex_unlock(&thread->philo->data_lock); */
+	ft_usleep(thread->philo->time_to_eat, thread->philo);
 	if (thread->id % 2 == 0)
 		return (unlock_forks_even(thread), TRUE);
 	else
@@ -75,7 +77,7 @@ void	*routine(void *ptr)
 	thread = ptr;
 	print_message(THINK, thread);
 	if (thread->id % 2 == 0)
-		ft_usleep(10, thread->philo);
+		ft_usleep(50, thread->philo);
 	while (!thread->philo->dead_or_full)
 	// while (!time_to_stop(thread))
 	{
