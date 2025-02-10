@@ -6,7 +6,7 @@
 /*   By: prynty <prynty@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 16:23:16 by prynty            #+#    #+#             */
-/*   Updated: 2025/02/08 21:26:29 by prynty           ###   ########.fr       */
+/*   Updated: 2025/02/10 14:37:15 by prynty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,6 @@ int	init_data(t_philo *philo, char **argv)
 		|| philo->num_times_to_eat == 0)
 		return (usage(), FALSE);
 	philo->dead_or_full = FALSE;
-	philo->meals_eaten = 0;
 	philo->full_philos = 0;
 	philo->start_time = get_time();
 	if (!allocate_data(philo))

@@ -6,7 +6,7 @@
 /*   By: prynty <prynty@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 19:42:13 by prynty            #+#    #+#             */
-/*   Updated: 2025/02/08 21:29:11 by prynty           ###   ########.fr       */
+/*   Updated: 2025/02/10 15:25:22 by prynty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,4 +54,3 @@ int	lock_forks_odd(t_thread *thread)
 	print_message(FORK, thread);
 	return (TRUE);
 }
-

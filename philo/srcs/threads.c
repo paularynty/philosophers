@@ -6,7 +6,7 @@
 /*   By: prynty <prynty@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 16:24:40 by prynty            #+#    #+#             */
-/*   Updated: 2025/02/10 14:08:48 by prynty           ###   ########.fr       */
+/*   Updated: 2025/02/10 15:25:41 by prynty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,32 +19,6 @@ int	time_to_stop(t_thread *thread)
 		return (pthread_mutex_unlock(&thread->philo->data_lock), TRUE);
 	return (pthread_mutex_unlock(&thread->philo->data_lock), FALSE);
 }
-
-// static int	thread_stopper(t_philo *philo)
-// {
-// 	size_t	i;
-
-// 	i = 0;
-// 	printf("do we go here at all\n");
-// 	while (i < philo->philos_num)
-// 	{
-// 		pthread_mutex_lock(&philo->data_lock);
-// 		if ((get_time() - philo->threads[i].prev_meal >= philo->time_to_die)
-// 			|| philo->full_philos == philo->philos_num)
-// 		{
-// 			philo->dead_or_full = TRUE;
-// 			printf("or here\n");
-// 			if (philo->full_philos == philo->philos_num)
-// 				printf("Every philosopher ate %ld times\n", philo->meals_eaten);
-// 			else
-// 				printf("%zu %zu died\n", get_time() - philo->start_time, i + 1);
-// 			return (pthread_mutex_unlock(&philo->data_lock), TRUE);
-// 		}
-// 		i++;
-// 		pthread_mutex_unlock(&philo->data_lock);
-// 	}
-// 	return (TRUE);
-// }
 
 int	dead_or_full(t_philo *philo)
 {
@@ -62,7 +36,7 @@ int	dead_or_full(t_philo *philo)
 				philo->dead_or_full = TRUE;
 				return (pthread_mutex_unlock(&philo->data_lock), TRUE);
 			}
-			else	
+			else
 			{			
 				print_message(DIED, &philo->threads[i]);
 				philo->dead_or_full = TRUE;
@@ -82,8 +56,9 @@ void	*monitoring(void *ptr)
 	philo = ptr;
 	while (TRUE)
 	{
-		if (dead_or_full(philo) == TRUE)
+		if (dead_or_full(philo))
 			break ;
+		usleep(500);
 	}
 	return (ptr);
 }

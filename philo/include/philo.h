@@ -6,7 +6,7 @@
 /*   By: prynty <prynty@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 14:38:32 by prynty            #+#    #+#             */
-/*   Updated: 2025/02/08 21:20:39 by prynty           ###   ########.fr       */
+/*   Updated: 2025/02/10 15:25:10 by prynty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,20 +49,17 @@ typedef struct s_thread
 typedef struct s_philo
 {
 	t_thread		*threads;
+	pthread_mutex_t	*forks;
+	pthread_mutex_t	print_lock;
+	pthread_mutex_t	data_lock;
 	size_t			philos_num;
-	size_t			eating;
-	size_t			meals_eaten;
-	size_t			last_meal;
 	size_t			time_to_die;
 	size_t			time_to_eat;
 	size_t			time_to_sleep;
-	size_t			start_time;
 	size_t			num_times_to_eat;
+	size_t			start_time;
 	size_t			full_philos;
 	int				dead_or_full;
-	pthread_mutex_t	print_lock;
-	pthread_mutex_t	data_lock;
-	pthread_mutex_t	*forks;
 }	t_philo;
 
 //errors.c
@@ -87,7 +84,6 @@ void	*routine(void *ptr);
 //threads.c
 int		time_to_stop(t_thread *thread);
 int		dead_or_full(t_philo *philo);
-// void	stop_thread(t_philo *philo);
 void	*monitoring(void *ptr);
 int		join_thread(t_philo *philo);
 int		create_thread(t_philo *philo);
