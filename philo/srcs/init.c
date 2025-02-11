@@ -6,26 +6,26 @@
 /*   By: prynty <prynty@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 16:23:16 by prynty            #+#    #+#             */
-/*   Updated: 2025/02/10 20:18:11 by prynty           ###   ########.fr       */
+/*   Updated: 2025/02/11 14:27:44 by prynty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-// static void	init_threads(t_table *table)
+// static void	init_philos(t_table *table)
 // {
 // 	size_t	i;
 
 // 	i = 0;
 // 	while (i < table->philos_num)
 // 	{
-// 		table->threads[i].philo = philo;
-// 		table->threads[i].meals_eaten = 0;
-// 		table->threads[i].id = i + 1;
-// 		table->threads[i].left_fork = &table->forks[i];
-// 		table->threads[i].right_fork = &table->forks[(i + 1)
+// 		table->philos[i].philo = philo;
+// 		table->philos[i].meals_eaten = 0;
+// 		table->philos[i].id = i + 1;
+// 		table->philos[i].left_fork = &table->forks[i];
+// 		table->philos[i].right_fork = &table->forks[(i + 1)
 // 			% table->philos_num];
-// 		table->threads[i++].prev_meal = table->start_time;
+// 		table->philos[i++].prev_meal = table->start_time;
 // 	}
 // }
 
@@ -55,12 +55,12 @@ static int	init_mutexes(t_table *table, size_t philos_num)
 static t_table	*allocate_data(size_t philos_num)
 {
 	t_table	*table;
-	
+
 	table = malloc(sizeof(t_table));
 	if (!table)
 		return (NULL);
-	table->threads = malloc(sizeof(t_thread *) * (philos_num + 1));
-	if (!table->threads)
+	table->philos = malloc(sizeof(t_philo *) * (philos_num + 1));
+	if (!table->philos)
 		return (NULL);
 	table->forks = malloc(sizeof(pthread_mutex_t) * (philos_num + 1));
 	if (!table->forks)
@@ -70,10 +70,10 @@ static t_table	*allocate_data(size_t philos_num)
 	return (table);
 }
 
-static int	init_philo(t_thread **thread, char **argv, size_t id)
+static int	init_philo(t_philo **thread, char **argv, size_t id)
 {
 	size_t	time;
-	
+
 	(*thread)->id = id;
 	(*thread)->time_to_die = ft_atol(argv[2]);
 	(*thread)->time_to_eat = ft_atol(argv[3]);
@@ -82,7 +82,7 @@ static int	init_philo(t_thread **thread, char **argv, size_t id)
 		(*thread)->num_times_to_eat = ft_atol(argv[5]);
 	else
 		(*thread)->num_times_to_eat = -1;
-	if ((*thread)->time_to_die == 0 ||(*thread)->time_to_eat == 0
+	if ((*thread)->time_to_die == 0 || (*thread)->time_to_eat == 0
 		|| (*thread)->time_to_eat == 0 || (*thread)->num_times_to_eat == 0)
 	{
 		print_usage();
@@ -97,15 +97,16 @@ static int	init_philo(t_thread **thread, char **argv, size_t id)
 
 void	connect_data(t_table **table, size_t index, size_t last_index)
 {
-	(*table)->threads[index]->philos_num = last_index + 1;
-	(*table)->threads[index]->dead_or_full = &(*table)->dead_or_full;
-	(*table)->threads[index]->data_lock = &(*table)->data_lock;
-	(*table)->threads[index]->print_lock = &(*table)->print_lock;
-	(*table)->threads[index]->left_fork = &(*table)->forks[index];
+	(*table)->philos[index]->philos_num = last_index + 1;
+	(*table)->philos[index]->dead_or_full = &(*table)->dead_or_full;
+	(*table)->philos[index]->full_philos = &(*table)->full_philos;
+	(*table)->philos[index]->data_lock = &(*table)->data_lock;
+	(*table)->philos[index]->print_lock = &(*table)->print_lock;
+	(*table)->philos[index]->left_fork = &(*table)->forks[index];
 	if (index == 0)
-		(*table)->threads[index]->right_fork = &(*table)->forks[last_index];
+		(*table)->philos[index]->right_fork = &(*table)->forks[last_index];
 	else
-		(*table)->threads[index]->right_fork = &(*table)->forks[index - 1];
+		(*table)->philos[index]->right_fork = &(*table)->forks[index - 1];
 }
 
 t_table	*init_data(char **argv)
@@ -121,16 +122,16 @@ t_table	*init_data(char **argv)
 		return (terminate(table, "Failed to allocate program data", i));
 	while (i < philos_num)
 	{
-		table->threads[i] = malloc(sizeof(t_thread));
-		if (!table->threads[i])
+		table->philos[i] = malloc(sizeof(t_philo));
+		if (!table->philos[i])
 			return (terminate(table, "Failed to allocate thread memory", i));
-		if (!init_philo(&table->threads[i], argv, i + 1))
+		if (!init_philo(&table->philos[i], argv, i + 1))
 			return (terminate(table, "Failed to initialize data", 0));
 		connect_data(&table, i, (philos_num - 1));
 		i++;
 	}
 	table->full_philos = 0;
 	table->dead_or_full = FALSE;
-	table->threads[philos_num] = NULL;
+	table->philos[philos_num] = NULL;
 	return (table);
 }

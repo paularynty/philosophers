@@ -6,7 +6,7 @@
 /*   By: prynty <prynty@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 14:38:32 by prynty            #+#    #+#             */
-/*   Updated: 2025/02/10 20:19:07 by prynty           ###   ########.fr       */
+/*   Updated: 2025/02/11 14:28:01 by prynty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,18 +46,18 @@ typedef struct s_thread
 	size_t			num_times_to_eat;
 	size_t			meals_eaten;
 	size_t			start_time;
-	size_t			full_philos;
+	size_t			*full_philos;
 	size_t			prev_meal;
 	int				*dead_or_full;
 	pthread_mutex_t	*print_lock;
 	pthread_mutex_t	*data_lock;
 	pthread_mutex_t	*right_fork;
 	pthread_mutex_t	*left_fork;
-}	t_thread;
+}	t_philo;
 
 typedef struct s_table
 {
-	t_thread		**threads;
+	t_philo			**philos;
 	pthread_mutex_t	*forks;
 	pthread_mutex_t	print_lock;
 	pthread_mutex_t	data_lock;
@@ -71,10 +71,10 @@ void	print_error(char *msg);
 t_table	*terminate(t_table *table, char *str, size_t i);
 
 //forks.c
-int		lock_forks_even(t_thread *thread);
-int		lock_forks_odd(t_thread *thread);
-void	unlock_forks_even(t_thread *thread);
-void	unlock_forks_odd(t_thread *thread);
+int		lock_forks_even(t_philo *philo);
+int		lock_forks_odd(t_philo *philo);
+void	unlock_forks_even(t_philo *philo);
+void	unlock_forks_odd(t_philo *philo);
 
 //init.c
 t_table	*init_data(char **argv);
@@ -84,15 +84,15 @@ void	*routine(void *ptr);
 void	*monitoring(void *ptr);
 
 //threads.c
-int		time_to_stop(t_thread *thread);
+int		time_to_stop(t_philo *philo);
 int		dead_or_full(t_table *table);
 int		join_thread(t_table *table);
 int		create_thread(t_table *table);
 
 //utils.c
-int		print_message(char *msg, t_thread *thread);
+int		print_message(char *msg, t_philo *philo);
 size_t	get_time(void);
-int		ft_usleep(t_thread *thread, size_t ms);
+int		ft_usleep(t_philo *philo, size_t ms);
 size_t	ft_atol(char *str);
 
 #endif

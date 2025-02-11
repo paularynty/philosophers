@@ -6,63 +6,63 @@
 /*   By: prynty <prynty@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 17:31:50 by prynty            #+#    #+#             */
-/*   Updated: 2025/02/10 20:04:42 by prynty           ###   ########.fr       */
+/*   Updated: 2025/02/11 14:27:51 by prynty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-static int	eating(t_thread *thread)
+static int	eating(t_philo *philo)
 {
-	if (thread->id % 2 == 0)
+	if (philo->id % 2 == 0)
 	{
-		if (!lock_forks_even(thread))
+		if (!lock_forks_even(philo))
 			return (FALSE);
 	}
 	else
 	{
-		if (!lock_forks_odd(thread))
+		if (!lock_forks_odd(philo))
 			return (FALSE);
 	}
-	pthread_mutex_lock(thread->data_lock);
-	thread->meals_eaten++;
-	thread->prev_meal = get_time();
-	if (thread->meals_eaten == thread->num_times_to_eat)
-		thread->full_philos++;
-	pthread_mutex_unlock(thread->data_lock);
-	if (!print_message(EAT, thread))
+	pthread_mutex_lock(philo->data_lock);
+	philo->meals_eaten++;
+	philo->prev_meal = get_time();
+	if (philo->meals_eaten == philo->num_times_to_eat)
+		(*philo->full_philos)++;
+	pthread_mutex_unlock(philo->data_lock);
+	if (!print_message(EAT, philo))
 		return (FALSE);
-	ft_usleep(thread, thread->time_to_eat);
-	if (thread->id % 2 == 0)
-		return (unlock_forks_even(thread), TRUE);
+	ft_usleep(philo, philo->time_to_eat);
+	if (philo->id % 2 == 0)
+		return (unlock_forks_even(philo), TRUE);
 	else
-		return (unlock_forks_odd(thread), TRUE);
+		return (unlock_forks_odd(philo), TRUE);
 }
 
-static int	sleeping_thinking(t_thread *thread)
+static int	sleeping_thinking(t_philo *philo)
 {
-	if (!print_message(SLEEP, thread))
+	if (!print_message(SLEEP, philo))
 		return (FALSE);
-	if (!ft_usleep(thread, thread->time_to_sleep + 1))
+	if (!ft_usleep(philo, philo->time_to_sleep + 1))
 		return (FALSE);
-	if (!print_message(THINK, thread))
+	if (!print_message(THINK, philo))
 		return (FALSE);
 	return (TRUE);
 }
 
 void	*routine(void *ptr)
 {
-	t_thread	*thread;
+	t_philo	*philo;
 
-	thread = ptr;
-	print_message(THINK, thread);
-	if (thread->id % 2 == 0)
-		ft_usleep(thread, 50);
-	while (!thread->dead_or_full)
+	philo = ptr;
+	print_message(THINK, philo);
+	if (philo->id % 2 == 0)
+		ft_usleep(philo, 50);
+	while (!*philo->dead_or_full)
 	{
-		if (!eating(thread))
+		if (!eating(philo))
 			break ;
-		if (!sleeping_thinking(thread))
+		if (!sleeping_thinking(philo))
 			break ;
 	}
 	return (ptr);
@@ -75,9 +75,9 @@ void	*monitoring(void *ptr)
 	table = ptr;
 	while (TRUE)
 	{
-		// if (table->dead_or_full)
 		if (dead_or_full(table))
 			break ;
+		usleep(500);
 	}
 	return (ptr);
 }

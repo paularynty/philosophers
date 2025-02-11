@@ -6,7 +6,7 @@
 #    By: prynty <prynty@student.hive.fi>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/08 14:38:26 by prynty            #+#    #+#              #
-#    Updated: 2025/02/08 20:00:50 by prynty           ###   ########.fr        #
+#    Updated: 2025/02/11 11:52:08 by prynty           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -47,7 +47,7 @@ SRCDIR			= srcs
 OBJDIR			= objs
 INCLUDE			= include
 
-CFLAGS			= -Wall -Wextra -Werror -I $(INCLUDE)
+CFLAGS			= -g -Wall -Wextra -Werror -I $(INCLUDE)
 
 SRCS			= $(SRCDIR)/main.c \
 				$(SRCDIR)/forks.c \
