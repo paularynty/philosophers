@@ -6,7 +6,7 @@
 /*   By: prynty <prynty@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 14:38:32 by prynty            #+#    #+#             */
-/*   Updated: 2025/02/10 15:25:10 by prynty           ###   ########.fr       */
+/*   Updated: 2025/02/10 20:19:07 by prynty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,39 +33,42 @@
 # define PINK "\e[1m\e[38;5;206m"
 # define RESET "\033[0;39m"
 
-typedef struct s_philo	t_philo;
+typedef struct s_table	t_table;
 
 typedef struct s_thread
 {
-	t_philo			*philo;
-	size_t			id;
-	size_t			prev_meal;
-	size_t			meals_eaten;
 	pthread_t		thread;
-	pthread_mutex_t	*right_fork;
-	pthread_mutex_t	*left_fork;
-}	t_thread;
-
-typedef struct s_philo
-{
-	t_thread		*threads;
-	pthread_mutex_t	*forks;
-	pthread_mutex_t	print_lock;
-	pthread_mutex_t	data_lock;
+	size_t			id;
 	size_t			philos_num;
 	size_t			time_to_die;
 	size_t			time_to_eat;
 	size_t			time_to_sleep;
 	size_t			num_times_to_eat;
+	size_t			meals_eaten;
 	size_t			start_time;
 	size_t			full_philos;
+	size_t			prev_meal;
+	int				*dead_or_full;
+	pthread_mutex_t	*print_lock;
+	pthread_mutex_t	*data_lock;
+	pthread_mutex_t	*right_fork;
+	pthread_mutex_t	*left_fork;
+}	t_thread;
+
+typedef struct s_table
+{
+	t_thread		**threads;
+	pthread_mutex_t	*forks;
+	pthread_mutex_t	print_lock;
+	pthread_mutex_t	data_lock;
 	int				dead_or_full;
-}	t_philo;
+	size_t			full_philos;
+}	t_table;
 
 //errors.c
-void	usage(void);
+void	print_usage(void);
 void	print_error(char *msg);
-void	terminate(char *str, t_philo *philo);
+t_table	*terminate(t_table *table, char *str, size_t i);
 
 //forks.c
 int		lock_forks_even(t_thread *thread);
@@ -74,24 +77,22 @@ void	unlock_forks_even(t_thread *thread);
 void	unlock_forks_odd(t_thread *thread);
 
 //init.c
-int		validate_args(int argc, char **argv);
-int		init_data(t_philo *philo, char **argv);
+t_table	*init_data(char **argv);
 
 //routine.c
-int		print_message(char *msg, t_thread *thread);
 void	*routine(void *ptr);
+void	*monitoring(void *ptr);
 
 //threads.c
 int		time_to_stop(t_thread *thread);
-int		dead_or_full(t_philo *philo);
-void	*monitoring(void *ptr);
-int		join_thread(t_philo *philo);
-int		create_thread(t_philo *philo);
+int		dead_or_full(t_table *table);
+int		join_thread(t_table *table);
+int		create_thread(t_table *table);
 
 //utils.c
+int		print_message(char *msg, t_thread *thread);
 size_t	get_time(void);
-int		ft_usleep(size_t ms, t_philo *philo);
-int		is_digit(char *str);
+int		ft_usleep(t_thread *thread, size_t ms);
 size_t	ft_atol(char *str);
 
 #endif

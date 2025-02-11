@@ -6,13 +6,13 @@
 /*   By: prynty <prynty@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 16:17:48 by prynty            #+#    #+#             */
-/*   Updated: 2025/02/08 19:45:06 by prynty           ###   ########.fr       */
+/*   Updated: 2025/02/10 19:45:38 by prynty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	usage(void)
+void	print_usage(void)
 {
 	printf("\n"PINK);
 	printf("Usage: ./philo philo_num die_time eat_time sleep_time meal_num\n");
@@ -30,20 +30,21 @@ void	print_error(char *msg)
 	printf("%s\n", msg);
 }
 
-void	terminate(char *str, t_philo *philo)
+t_table	*terminate(t_table *table, char *str, size_t i)
 {
-	size_t	i;
-
 	if (str)
 	{
 		printf(RED"Error\n"RESET);
 		printf("%s\n", str);
 	}
-	i = 0;
-	while (i < philo->philos_num)
-		pthread_mutex_destroy(&philo->forks[i++]);
-	pthread_mutex_destroy(&philo->data_lock);
-	pthread_mutex_destroy(&philo->print_lock);
-	free(philo->threads);
-	free(philo->forks);
+	while (table->threads[i])
+		pthread_mutex_destroy(&table->forks[i++]);
+	pthread_mutex_destroy(&table->data_lock);
+	pthread_mutex_destroy(&table->print_lock);
+	if (table->threads)
+		free(table->threads);
+	if (table->forks)
+		free(table->forks);
+	free(table);
+	return (NULL);
 }

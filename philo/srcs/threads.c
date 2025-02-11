@@ -6,7 +6,7 @@
 /*   By: prynty <prynty@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 16:24:40 by prynty            #+#    #+#             */
-/*   Updated: 2025/02/10 15:25:41 by prynty           ###   ########.fr       */
+/*   Updated: 2025/02/10 20:14:30 by prynty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,79 +14,78 @@
 
 int	time_to_stop(t_thread *thread)
 {
-	pthread_mutex_lock(&thread->philo->data_lock);
-	if (thread->philo->dead_or_full)
-		return (pthread_mutex_unlock(&thread->philo->data_lock), TRUE);
-	return (pthread_mutex_unlock(&thread->philo->data_lock), FALSE);
+	pthread_mutex_lock(thread->data_lock);
+	if (thread->dead_or_full)
+	{
+		pthread_mutex_unlock(thread->data_lock);
+		return (TRUE);
+	}
+	pthread_mutex_unlock(thread->data_lock);
+	return (FALSE);
 }
 
-int	dead_or_full(t_philo *philo)
+int	dead_or_full(t_table *table)
 {
 	size_t	i;
 
 	i = 0;
-	while (i < philo->philos_num)
+	while (table->threads[i])
 	{
-		pthread_mutex_lock(&philo->data_lock);
-		if ((get_time() - philo->threads[i].prev_meal >= philo->time_to_die)
-			|| philo->full_philos == philo->philos_num)
+		pthread_mutex_lock(&table->data_lock);
+		if ((get_time() - table->threads[i]->prev_meal >= table->threads[i]->time_to_die)
+			|| table->full_philos == table->threads[i]->philos_num)
 		{
-			if (philo->full_philos == philo->philos_num)
+			if (table->full_philos == table->threads[i]->philos_num)
 			{
-				philo->dead_or_full = TRUE;
-				return (pthread_mutex_unlock(&philo->data_lock), TRUE);
+				table->dead_or_full = TRUE;
+				pthread_mutex_unlock(&table->data_lock);
+				return (TRUE);
 			}
 			else
-			{			
-				print_message(DIED, &philo->threads[i]);
-				philo->dead_or_full = TRUE;
-				return (pthread_mutex_unlock(&philo->data_lock), TRUE);
+			{
+				printf("%zu\n", table->threads[i]->prev_meal);
+				print_message(DIED, table->threads[i]);
+				table->dead_or_full = TRUE;
+				pthread_mutex_unlock(&table->data_lock);
+				return (TRUE);
 			}
 		}
 		i++;
-		pthread_mutex_unlock(&philo->data_lock);
+		pthread_mutex_unlock(&table->data_lock);
 	}
 	return (FALSE);
 }
 
-void	*monitoring(void *ptr)
-{
-	t_philo	*philo;
-
-	philo = ptr;
-	while (TRUE)
-	{
-		if (dead_or_full(philo))
-			break ;
-		usleep(500);
-	}
-	return (ptr);
-}
-
-int	join_thread(t_philo *philo)
+int	join_thread(t_table *table)
 {
 	size_t	i;
 
 	i = 0;
-	while (i < philo->philos_num)
+	while (table->threads[i])
 	{
-		if (pthread_join(philo->threads[i].thread, NULL) != 0)
-			return (terminate("Failed to join threads", philo), FALSE);
+		if (pthread_join(table->threads[i]->thread, NULL) != 0)
+		{
+			terminate(table, "Failed to join threads", 0);
+			return (FALSE);
+		}
 		i++;
 	}
 	return (TRUE);
 }
 
-int	create_thread(t_philo *philo)
+int	create_thread(t_table *table)
 {
 	size_t	i;
 
 	i = 0;
-	while (i < philo->philos_num)
+	while (table->threads[i])
 	{
-		if (pthread_create(&(philo->threads[i].thread), NULL, &routine,
-				&philo->threads[i]) != 0)
-			return (terminate("Failed to create threads", philo), FALSE);
+		if (pthread_create(&table->threads[i]->thread, NULL, &routine,
+				table->threads[i]) != 0)
+		{		
+			terminate(table, "Failed to create threads", 0);
+			return (FALSE);
+		}
 		i++;
 	}
 	return (TRUE);
