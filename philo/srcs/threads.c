@@ -6,7 +6,7 @@
 /*   By: prynty <prynty@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 16:24:40 by prynty            #+#    #+#             */
-/*   Updated: 2025/02/11 14:28:22 by prynty           ###   ########.fr       */
+/*   Updated: 2025/02/11 14:51:33 by prynty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,14 +37,19 @@ int	dead_or_full(t_table *table)
 		{
 			if (table->full_philos == table->philos[0]->philos_num)
 			{
+				// pthread_mutex_lock(table->philos[i]->death_lock);
 				table->dead_or_full = TRUE;
+				// pthread_mutex_unlock(table->philos[i]->death_lock);
 				return (pthread_mutex_unlock(table->philos[i]->data_lock), TRUE);
 			}
 			else
 			{
 				print_message(DIED, table->philos[i]);
+				// pthread_mutex_lock(table->philos[i]->death_lock);
 				table->dead_or_full = TRUE;
-				return (pthread_mutex_unlock(table->philos[i]->data_lock), TRUE);
+				// pthread_mutex_unlock(table->philos[i]->death_lock);
+				pthread_mutex_unlock(table->philos[i]->data_lock);
+				return (TRUE);
 			}
 		}
 		pthread_mutex_unlock(table->philos[i]->data_lock);

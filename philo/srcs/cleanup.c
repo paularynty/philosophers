@@ -6,7 +6,7 @@
 /*   By: prynty <prynty@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 16:17:48 by prynty            #+#    #+#             */
-/*   Updated: 2025/02/11 14:22:49 by prynty           ###   ########.fr       */
+/*   Updated: 2025/02/11 14:38:07 by prynty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ t_table	*terminate(t_table *table, char *str, size_t i)
 		pthread_mutex_destroy(&table->forks[i++]);
 	pthread_mutex_destroy(&table->data_lock);
 	pthread_mutex_destroy(&table->print_lock);
+	pthread_mutex_destroy(&table->death_lock);
 	if (table->philos)
 		free(table->philos);
 	if (table->forks)

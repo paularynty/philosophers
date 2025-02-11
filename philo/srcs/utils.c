@@ -6,7 +6,7 @@
 /*   By: prynty <prynty@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 16:18:52 by prynty            #+#    #+#             */
-/*   Updated: 2025/02/11 14:25:52 by prynty           ###   ########.fr       */
+/*   Updated: 2025/02/11 14:45:48 by prynty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,15 +17,12 @@ int	print_message(char *msg, t_philo *philo)
 	size_t	time;
 
 	time = get_time() - philo->start_time;
-	pthread_mutex_lock(philo->data_lock);
-	//add death lock
+	pthread_mutex_lock(philo->print_lock);
 	if (*philo->dead_or_full)
 	{
-		pthread_mutex_unlock(philo->data_lock);
+		pthread_mutex_unlock(philo->print_lock);
 		return (FALSE);
 	}
-	pthread_mutex_unlock(philo->data_lock);
-	pthread_mutex_lock(philo->print_lock);
 	printf("%zu %zu %s\n", time, philo->id, msg);
 	pthread_mutex_unlock(philo->print_lock);
 	return (TRUE);
@@ -46,13 +43,13 @@ int	ft_usleep(t_philo *philo, size_t ms)
 	start = get_time();
 	while ((get_time() - start) < ms)
 	{
-		pthread_mutex_lock(philo->data_lock);
+		pthread_mutex_lock(philo->death_lock);
 		if (*(philo->dead_or_full))
 		{
-			pthread_mutex_unlock(philo->data_lock);
+			pthread_mutex_unlock(philo->death_lock);
 			return (FALSE);
 		}
-		pthread_mutex_unlock(philo->data_lock);
+		pthread_mutex_unlock(philo->death_lock);
 		usleep(100);
 	}
 	return (TRUE);

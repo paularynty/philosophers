@@ -6,7 +6,7 @@
 /*   By: prynty <prynty@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 17:31:50 by prynty            #+#    #+#             */
-/*   Updated: 2025/02/11 14:27:51 by prynty           ###   ########.fr       */
+/*   Updated: 2025/02/11 15:12:19 by prynty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,13 +58,17 @@ void	*routine(void *ptr)
 	print_message(THINK, philo);
 	if (philo->id % 2 == 0)
 		ft_usleep(philo, 50);
+	pthread_mutex_lock(philo->death_lock);
 	while (!*philo->dead_or_full)
 	{
+		pthread_mutex_unlock(philo->death_lock);
 		if (!eating(philo))
 			break ;
 		if (!sleeping_thinking(philo))
 			break ;
+		pthread_mutex_lock(philo->death_lock);
 	}
+	// pthread_mutex_unlock(philo->death_lock);
 	return (ptr);
 }
 
@@ -75,8 +79,13 @@ void	*monitoring(void *ptr)
 	table = ptr;
 	while (TRUE)
 	{
+		pthread_mutex_lock(&table->death_lock);
 		if (dead_or_full(table))
+		{
+			pthread_mutex_unlock(&table->death_lock);
 			break ;
+		}
+		pthread_mutex_unlock(&table->death_lock);
 		usleep(500);
 	}
 	return (ptr);

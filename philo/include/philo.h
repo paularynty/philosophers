@@ -6,7 +6,7 @@
 /*   By: prynty <prynty@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 14:38:32 by prynty            #+#    #+#             */
-/*   Updated: 2025/02/11 14:28:01 by prynty           ###   ########.fr       */
+/*   Updated: 2025/02/11 15:11:12 by prynty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@
 
 typedef struct s_table	t_table;
 
-typedef struct s_thread
+typedef struct s_philo
 {
 	pthread_t		thread;
 	size_t			id;
@@ -48,9 +48,10 @@ typedef struct s_thread
 	size_t			start_time;
 	size_t			*full_philos;
 	size_t			prev_meal;
-	int				*dead_or_full;
+	_Atomic int		*dead_or_full;
 	pthread_mutex_t	*print_lock;
 	pthread_mutex_t	*data_lock;
+	pthread_mutex_t	*death_lock;
 	pthread_mutex_t	*right_fork;
 	pthread_mutex_t	*left_fork;
 }	t_philo;
@@ -61,7 +62,8 @@ typedef struct s_table
 	pthread_mutex_t	*forks;
 	pthread_mutex_t	print_lock;
 	pthread_mutex_t	data_lock;
-	int				dead_or_full;
+	pthread_mutex_t	death_lock;
+	_Atomic int		dead_or_full;
 	size_t			full_philos;
 }	t_table;
 

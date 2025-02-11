@@ -6,7 +6,7 @@
 /*   By: prynty <prynty@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 16:23:16 by prynty            #+#    #+#             */
-/*   Updated: 2025/02/11 14:27:44 by prynty           ###   ########.fr       */
+/*   Updated: 2025/02/11 16:15:08 by prynty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,8 @@ static int	init_mutexes(t_table *table, size_t philos_num)
 		i++;
 	}
 	if (pthread_mutex_init(&table->data_lock, NULL) != 0
-		|| pthread_mutex_init(&table->print_lock, NULL) != 0)
+		|| pthread_mutex_init(&table->print_lock, NULL) != 0
+		|| pthread_mutex_init(&table->death_lock, NULL) != 0)
 	{
 		print_error("Error initializing mutexes");
 		return (FALSE);
@@ -83,7 +84,7 @@ static int	init_philo(t_philo **thread, char **argv, size_t id)
 	else
 		(*thread)->num_times_to_eat = -1;
 	if ((*thread)->time_to_die == 0 || (*thread)->time_to_eat == 0
-		|| (*thread)->time_to_eat == 0 || (*thread)->num_times_to_eat == 0)
+		|| (*thread)->time_to_sleep == 0 || (*thread)->num_times_to_eat == 0)
 	{
 		print_usage();
 		return (FALSE);
@@ -102,6 +103,7 @@ void	connect_data(t_table **table, size_t index, size_t last_index)
 	(*table)->philos[index]->full_philos = &(*table)->full_philos;
 	(*table)->philos[index]->data_lock = &(*table)->data_lock;
 	(*table)->philos[index]->print_lock = &(*table)->print_lock;
+	(*table)->philos[index]->death_lock = &(*table)->death_lock;
 	(*table)->philos[index]->left_fork = &(*table)->forks[index];
 	if (index == 0)
 		(*table)->philos[index]->right_fork = &(*table)->forks[last_index];
@@ -116,6 +118,8 @@ t_table	*init_data(char **argv)
 	size_t	i;
 
 	philos_num = ft_atol(argv[1]);
+	if (philos_num == 0)
+		return (NULL);
 	i = 0;
 	table = allocate_data(philos_num);
 	if (!table)

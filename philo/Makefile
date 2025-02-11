@@ -6,7 +6,7 @@
 #    By: prynty <prynty@student.hive.fi>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/08 14:38:26 by prynty            #+#    #+#              #
-#    Updated: 2025/02/11 11:52:08 by prynty           ###   ########.fr        #
+#    Updated: 2025/02/11 15:03:47 by prynty           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -65,7 +65,7 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.c
 	@mkdir -p $(dir $@)
 	@cc -c -g $(CFLAGS) $< -o $@
 
-$(NAME): $(OBJS)
+$(NAME): $(OBJS) include/philo.h
 	@cc -g -pthread $(CFLAGS) $(SRCS) -o $(NAME)
 	@$(OBJ_READY)
 	@chmod 777 $(NAME)
