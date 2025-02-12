@@ -6,19 +6,19 @@
 /*   By: prynty <prynty@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 14:38:32 by prynty            #+#    #+#             */
-/*   Updated: 2025/02/12 15:31:10 by prynty           ###   ########.fr       */
+/*   Updated: 2025/02/12 17:56:57 by prynty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PHILO_H
 # define PHILO_H
 
-# include <stdlib.h> //for malloc, free
-# include <stdio.h> //for printf
-# include <string.h> //for memset
-# include <pthread.h> //for pthread functions
-# include <sys/time.h> //for gettimeofday
-# include <unistd.h> //for write, usleep
+# include <stdlib.h>
+# include <stdio.h>
+# include <string.h>
+# include <pthread.h>
+# include <sys/time.h>
+# include <unistd.h>
 # include <limits.h>
 
 # define TRUE 1
@@ -60,35 +60,37 @@ typedef struct s_philo
 	size_t			num_times_to_eat;
 	size_t			start_time;
 	size_t			full_philos;
+	_Atomic int		sim_start;
 	_Atomic int		dead_or_full;
 }	t_philo;
 
-//errors.c
+//cleanup.c
 void	usage(void);
 void	print_error(char *msg);
 void	terminate(char *str, t_philo *philo);
 
 //forks.c
+void	unlock_forks(t_thread *thread);
 int		lock_forks_even(t_thread *thread);
 int		lock_forks_odd(t_thread *thread);
-void	unlock_forks(t_thread *thread);
 
 //init.c
 int		validate_args(int argc, char **argv);
 int		init_data(t_philo *philo, char **argv);
 
 //routine.c
-int		print_message(char *msg, t_thread *thread);
 void	*routine(void *ptr);
+void	*monitoring(void *ptr);
 
 //threads.c
 int		time_to_stop(t_thread *thread);
 int		dead_or_full(t_philo *philo);
-void	*monitoring(void *ptr);
 int		join_thread(t_philo *philo);
+void	*sync_threads(void *ptr);
 int		create_thread(t_philo *philo);
 
 //utils.c
+int		print_message(char *msg, t_thread *thread);
 size_t	get_time(void);
 int		ft_usleep(size_t ms, t_philo *philo);
 int		is_digit(char *str);

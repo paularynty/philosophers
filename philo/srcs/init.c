@@ -6,7 +6,7 @@
 /*   By: prynty <prynty@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 16:23:16 by prynty            #+#    #+#             */
-/*   Updated: 2025/02/12 15:39:55 by prynty           ###   ########.fr       */
+/*   Updated: 2025/02/12 17:49:37 by prynty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ static void	init_threads(t_philo *philo)
 		philo->threads[i].left_fork = &philo->forks[i];
 		philo->threads[i].right_fork = &philo->forks[(i + 1)
 			% philo->philos_num];
-		philo->threads[i++].prev_meal = philo->start_time;
+		i++;
 	}
 }
 
@@ -105,6 +105,7 @@ int	init_data(t_philo *philo, char **argv)
 	}
 	philo->dead_or_full = FALSE;
 	philo->full_philos = 0;
+	philo->sim_start = FALSE;
 	philo->start_time = get_time();
 	if (!allocate_data(philo))
 		return (FALSE);

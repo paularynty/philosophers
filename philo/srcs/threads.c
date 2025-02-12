@@ -6,7 +6,7 @@
 /*   By: prynty <prynty@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 16:24:40 by prynty            #+#    #+#             */
-/*   Updated: 2025/02/12 15:40:05 by prynty           ###   ########.fr       */
+/*   Updated: 2025/02/12 17:38:14 by prynty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,24 +51,6 @@ int	dead_or_full(t_philo *philo)
 	return (FALSE);
 }
 
-void	*monitoring(void *ptr)
-{
-	t_philo	*philo;
-
-	philo = ptr;
-	while (TRUE)
-	{
-		pthread_mutex_lock(&philo->data_lock);
-		if (dead_or_full(philo))
-		{
-			pthread_mutex_unlock(&philo->data_lock);
-			break ;
-		}
-		pthread_mutex_unlock(&philo->data_lock);
-	}
-	return (ptr);
-}
-
 int	join_thread(t_philo *philo)
 {
 	size_t	i;
@@ -86,6 +68,26 @@ int	join_thread(t_philo *philo)
 	return (TRUE);
 }
 
+void	*sync_threads(void *ptr)
+{
+	t_thread	*thread;
+
+	thread = ptr;
+	while (TRUE)
+	{
+		pthread_mutex_lock(&thread->philo->data_lock);
+		if (thread->philo->sim_start)
+		{
+			pthread_mutex_unlock(&thread->philo->data_lock);
+			break ;
+		}
+		pthread_mutex_unlock(&thread->philo->data_lock);
+		usleep(1);
+	}
+	routine(thread);
+	return (ptr);
+}
+
 int	create_thread(t_philo *philo)
 {
 	size_t	i;
@@ -93,7 +95,7 @@ int	create_thread(t_philo *philo)
 	i = 0;
 	while (i < philo->philos_num)
 	{
-		if (pthread_create(&(philo->threads[i].thread), NULL, &routine,
+		if (pthread_create(&(philo->threads[i].thread), NULL, &sync_threads,
 				&philo->threads[i]) != 0)
 		{
 			terminate("Failed to create threads", philo);
@@ -101,5 +103,12 @@ int	create_thread(t_philo *philo)
 		}
 		i++;
 	}
+	pthread_mutex_lock(&philo->data_lock);
+	philo->start_time = get_time();
+	i = 0;
+	while (i < philo->philos_num)
+		philo->threads[i++].prev_meal = philo->start_time;
+	philo->sim_start = TRUE;
+	pthread_mutex_unlock(&philo->data_lock);
 	return (TRUE);
 }

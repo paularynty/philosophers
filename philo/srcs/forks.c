@@ -6,7 +6,7 @@
 /*   By: prynty <prynty@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 19:42:13 by prynty            #+#    #+#             */
-/*   Updated: 2025/02/12 15:32:43 by prynty           ###   ########.fr       */
+/*   Updated: 2025/02/12 15:41:58 by prynty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ int	lock_forks_odd(t_thread *thread)
 	pthread_mutex_lock(thread->right_fork);
 	if (time_to_stop(thread))
 	{
-		unlock_forks_odd(thread);
+		unlock_forks(thread);
 		return (FALSE);
 	}
 	print_message(FORK, thread);
