@@ -6,7 +6,7 @@
 /*   By: prynty <prynty@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 14:38:32 by prynty            #+#    #+#             */
-/*   Updated: 2025/02/10 15:25:10 by prynty           ###   ########.fr       */
+/*   Updated: 2025/02/12 15:31:10 by prynty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 # include <pthread.h> //for pthread functions
 # include <sys/time.h> //for gettimeofday
 # include <unistd.h> //for write, usleep
+# include <limits.h>
 
 # define TRUE 1
 # define FALSE 0
@@ -59,7 +60,7 @@ typedef struct s_philo
 	size_t			num_times_to_eat;
 	size_t			start_time;
 	size_t			full_philos;
-	int				dead_or_full;
+	_Atomic int		dead_or_full;
 }	t_philo;
 
 //errors.c
@@ -70,8 +71,7 @@ void	terminate(char *str, t_philo *philo);
 //forks.c
 int		lock_forks_even(t_thread *thread);
 int		lock_forks_odd(t_thread *thread);
-void	unlock_forks_even(t_thread *thread);
-void	unlock_forks_odd(t_thread *thread);
+void	unlock_forks(t_thread *thread);
 
 //init.c
 int		validate_args(int argc, char **argv);

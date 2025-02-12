@@ -6,7 +6,7 @@
 #    By: prynty <prynty@student.hive.fi>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/08 14:38:26 by prynty            #+#    #+#              #
-#    Updated: 2025/02/08 20:00:50 by prynty           ###   ########.fr        #
+#    Updated: 2025/02/12 11:09:20 by prynty           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -46,6 +46,7 @@ NAME			= philo
 SRCDIR			= srcs
 OBJDIR			= objs
 INCLUDE			= include
+HEADER			= $(INCLUDE)/philo.h
 
 CFLAGS			= -Wall -Wextra -Werror -I $(INCLUDE)
 
@@ -65,7 +66,7 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.c
 	@mkdir -p $(dir $@)
 	@cc -c -g $(CFLAGS) $< -o $@
 
-$(NAME): $(OBJS)
+$(NAME): $(OBJS) $(HEADER)
 	@cc -g -pthread $(CFLAGS) $(SRCS) -o $(NAME)
 	@$(OBJ_READY)
 	@chmod 777 $(NAME)

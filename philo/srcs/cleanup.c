@@ -6,7 +6,7 @@
 /*   By: prynty <prynty@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 16:17:48 by prynty            #+#    #+#             */
-/*   Updated: 2025/02/08 19:45:06 by prynty           ###   ########.fr       */
+/*   Updated: 2025/02/12 13:04:17 by prynty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,10 @@ void	terminate(char *str, t_philo *philo)
 	}
 	i = 0;
 	while (i < philo->philos_num)
-		pthread_mutex_destroy(&philo->forks[i++]);
+	{
+		pthread_mutex_destroy(&philo->forks[i]);
+		i++;
+	}
 	pthread_mutex_destroy(&philo->data_lock);
 	pthread_mutex_destroy(&philo->print_lock);
 	free(philo->threads);

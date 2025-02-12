@@ -6,7 +6,7 @@
 /*   By: prynty <prynty@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 16:18:52 by prynty            #+#    #+#             */
-/*   Updated: 2025/02/10 14:21:11 by prynty           ###   ########.fr       */
+/*   Updated: 2025/02/12 15:38:31 by prynty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,21 +27,16 @@ int	ft_usleep(size_t ms, t_philo *philo)
 	start = get_time();
 	while ((get_time() - start) < ms)
 	{
+		pthread_mutex_lock(&philo->data_lock);
 		if (philo->dead_or_full)
+		{
+			pthread_mutex_unlock(&philo->data_lock);
 			return (FALSE);
-		usleep(500);
+		}
+		pthread_mutex_unlock(&philo->data_lock);
+		usleep(10);
 	}
 	return (TRUE);
-}
-
-size_t	ft_strlen(char *str)
-{
-	size_t	i;
-
-	i = 0;
-	while (str[i])
-		i++;
-	return (i);
 }
 
 int	is_digit(char *str)
@@ -58,11 +53,15 @@ int	is_digit(char *str)
 size_t	ft_atol(char *str)
 {
 	size_t	result;
+	size_t	check;
 
 	result = 0;
 	while (*str >= '0' && *str <= '9')
 	{
+		check = result;
 		result = (result * 10) + (*str - '0');
+		if (check != result / 10)
+			return (0);
 		str++;
 	}
 	return ((size_t)(result));

@@ -6,7 +6,7 @@
 /*   By: prynty <prynty@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 16:23:16 by prynty            #+#    #+#             */
-/*   Updated: 2025/02/10 14:37:15 by prynty           ###   ########.fr       */
+/*   Updated: 2025/02/12 15:39:55 by prynty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,18 @@ int	validate_args(int argc, char **argv)
 	int	i;
 
 	if (argc < 5 || argc > 6)
-		return (usage(), FALSE);
+	{
+		usage();
+		return (FALSE);
+	}
 	i = 1;
 	while (i < argc)
 	{
 		if (!is_digit(argv[i]))
-			return (usage(), FALSE);
+		{
+			usage();
+			return (FALSE);
+		}
 		i++;
 	}
 	return (TRUE);
@@ -66,12 +72,16 @@ static int	allocate_data(t_philo *philo)
 {
 	philo->threads = malloc(sizeof(t_thread) * philo->philos_num);
 	if (!philo->threads)
-		return (print_error("Failed to allocate threads"), FALSE);
+	{
+		print_error("Failed to allocate threads");
+		return (FALSE);
+	}
 	philo->forks = malloc(sizeof(pthread_mutex_t) * philo->philos_num);
 	if (!philo->forks)
 	{
 		free(philo->threads);
-		return (print_error("Failed to allocate forks"), FALSE);
+		print_error("Failed to allocate forks");
+		return (FALSE);
 	}
 	return (TRUE);
 }
@@ -87,9 +97,12 @@ int	init_data(t_philo *philo, char **argv)
 	else
 		philo->num_times_to_eat = -1;
 	if (philo->philos_num == 0 || philo->time_to_die == 0
-		|| philo->time_to_eat == 0 || philo->time_to_eat == 0
+		|| philo->time_to_eat == 0 || philo->time_to_sleep == 0
 		|| philo->num_times_to_eat == 0)
-		return (usage(), FALSE);
+	{
+		usage();
+		return (FALSE);
+	}
 	philo->dead_or_full = FALSE;
 	philo->full_philos = 0;
 	philo->start_time = get_time();

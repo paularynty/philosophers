@@ -6,7 +6,7 @@
 /*   By: prynty <prynty@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 17:31:50 by prynty            #+#    #+#             */
-/*   Updated: 2025/02/10 14:35:42 by prynty           ###   ########.fr       */
+/*   Updated: 2025/02/12 15:33:43 by prynty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +18,14 @@ int	print_message(char *msg, t_thread *thread)
 
 	time = get_time() - thread->philo->start_time;
 	pthread_mutex_lock(&thread->philo->print_lock);
-	//add death lock
 	if (thread->philo->dead_or_full)
-		return (pthread_mutex_unlock(&thread->philo->print_lock), FALSE);
+	{
+		pthread_mutex_unlock(&thread->philo->print_lock);
+		return (FALSE);
+	}
 	printf("%zu %zu %s\n", time, thread->id, msg);
-	return (pthread_mutex_unlock(&thread->philo->print_lock), TRUE);
+	pthread_mutex_unlock(&thread->philo->print_lock);
+	return (TRUE);
 }
 
 static int	eating(t_thread *thread)
@@ -44,12 +47,13 @@ static int	eating(t_thread *thread)
 		thread->philo->full_philos++;
 	pthread_mutex_unlock(&thread->philo->data_lock);
 	if (!print_message(EAT, thread))
+	{
+		unlock_forks(thread);
 		return (FALSE);
+	}
 	ft_usleep(thread->philo->time_to_eat, thread->philo);
-	if (thread->id % 2 == 0)
-		return (unlock_forks_even(thread), TRUE);
-	else
-		return (unlock_forks_odd(thread), TRUE);
+	unlock_forks(thread);
+	return (TRUE);
 }
 
 static int	sleeping_thinking(t_thread *thread)
