@@ -6,11 +6,27 @@
 /*   By: prynty <prynty@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 16:18:52 by prynty            #+#    #+#             */
-/*   Updated: 2025/02/12 15:38:31 by prynty           ###   ########.fr       */
+/*   Updated: 2025/02/18 10:36:26 by prynty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+int	print_message(char *msg, t_philo *philo)
+{
+	size_t	time;
+
+	pthread_mutex_lock(&philo->table->print_lock);
+	time = get_time() - philo->table->start_time;
+	if (philo->table->dead_or_full)
+	{
+		pthread_mutex_unlock(&philo->table->print_lock);
+		return (FALSE);
+	}
+	printf("%zu %zu %s\n", time, philo->id, msg);
+	pthread_mutex_unlock(&philo->table->print_lock);
+	return (TRUE);
+}
 
 size_t	get_time(void)
 {
@@ -20,21 +36,21 @@ size_t	get_time(void)
 	return (time.tv_sec * 1000 + time.tv_usec / 1000);
 }
 
-int	ft_usleep(size_t ms, t_philo *philo)
+int	ft_usleep(size_t ms, t_table *table)
 {
 	size_t	start;
 
 	start = get_time();
 	while ((get_time() - start) < ms)
 	{
-		pthread_mutex_lock(&philo->data_lock);
-		if (philo->dead_or_full)
+		pthread_mutex_lock(&table->data_lock);
+		if (table->dead_or_full)
 		{
-			pthread_mutex_unlock(&philo->data_lock);
+			pthread_mutex_unlock(&table->data_lock);
 			return (FALSE);
 		}
-		pthread_mutex_unlock(&philo->data_lock);
-		usleep(10);
+		pthread_mutex_unlock(&table->data_lock);
+		usleep(500);
 	}
 	return (TRUE);
 }
@@ -64,5 +80,5 @@ size_t	ft_atol(char *str)
 			return (0);
 		str++;
 	}
-	return ((size_t)(result));
+	return (result);
 }

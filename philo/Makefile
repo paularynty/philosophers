@@ -6,7 +6,7 @@
 #    By: prynty <prynty@student.hive.fi>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/08 14:38:26 by prynty            #+#    #+#              #
-#    Updated: 2025/02/12 11:09:20 by prynty           ###   ########.fr        #
+#    Updated: 2025/02/12 16:37:06 by prynty           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -64,10 +64,10 @@ all: $(NAME)
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.c
 	@mkdir -p $(dir $@)
-	@cc -c -g $(CFLAGS) $< -o $@
+	@cc -c $(CFLAGS) $< -o $@
 
 $(NAME): $(OBJS) $(HEADER)
-	@cc -g -pthread $(CFLAGS) $(SRCS) -o $(NAME)
+	@cc -pthread $(CFLAGS) $(SRCS) -o $(NAME)
 	@$(OBJ_READY)
 	@chmod 777 $(NAME)
 	@$(PHILO_READY)

@@ -6,58 +6,58 @@
 /*   By: prynty <prynty@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 19:42:13 by prynty            #+#    #+#             */
-/*   Updated: 2025/02/12 15:32:43 by prynty           ###   ########.fr       */
+/*   Updated: 2025/02/18 10:34:28 by prynty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	unlock_forks(t_thread *thread)
+void	unlock_forks(t_philo *philo)
 {
-	pthread_mutex_unlock(thread->left_fork);
-	pthread_mutex_unlock(thread->right_fork);
+	pthread_mutex_unlock(philo->left_fork);
+	pthread_mutex_unlock(philo->right_fork);
 }
 
-int	lock_forks_even(t_thread *thread)
+int	lock_forks_even(t_philo *philo)
 {
-	pthread_mutex_lock(thread->right_fork);
-	if (time_to_stop(thread))
+	pthread_mutex_lock(philo->right_fork);
+	if (time_to_stop(philo))
 	{
-		pthread_mutex_unlock(thread->right_fork);
+		pthread_mutex_unlock(philo->right_fork);
 		return (FALSE);
 	}
-	print_message(FORK, thread);
-	pthread_mutex_lock(thread->left_fork);
-	if (time_to_stop(thread))
+	print_message(FORK, philo);
+	pthread_mutex_lock(philo->left_fork);
+	if (time_to_stop(philo))
 	{
-		unlock_forks(thread);
+		unlock_forks(philo);
 		return (FALSE);
 	}
-	print_message(FORK, thread);
+	print_message(FORK, philo);
 	return (TRUE);
 }
 
-int	lock_forks_odd(t_thread *thread)
+int	lock_forks_odd(t_philo *philo)
 {
-	pthread_mutex_lock(thread->left_fork);
-	if (time_to_stop(thread))
+	pthread_mutex_lock(philo->left_fork);
+	if (time_to_stop(philo))
 	{
-		pthread_mutex_unlock(thread->left_fork);
+		pthread_mutex_unlock(philo->left_fork);
 		return (FALSE);
 	}
-	print_message(FORK, thread);
-	if (thread->philo->philos_num == 1)
+	print_message(FORK, philo);
+	if (philo->table->philos_num == 1)
 	{
-		ft_usleep(thread->philo->time_to_die, thread->philo);
-		pthread_mutex_unlock(thread->left_fork);
+		ft_usleep(philo->table->time_to_die, philo->table);
+		pthread_mutex_unlock(philo->left_fork);
 		return (FALSE);
 	}
-	pthread_mutex_lock(thread->right_fork);
-	if (time_to_stop(thread))
+	pthread_mutex_lock(philo->right_fork);
+	if (time_to_stop(philo))
 	{
-		unlock_forks_odd(thread);
+		unlock_forks(philo);
 		return (FALSE);
 	}
-	print_message(FORK, thread);
+	print_message(FORK, philo);
 	return (TRUE);
 }
